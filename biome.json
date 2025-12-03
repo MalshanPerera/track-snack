@@ -1,0 +1,58 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": [
+			"**/src/**/*",
+			"**/.vscode/**/*",
+			"**/index.html",
+			"**/vite.config.js",
+			"!**/src/routeTree.gen.ts",
+			"!**/src/styles.css"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							["react", "react-dom", "react/**"],
+							":BLANK_LINE:",
+							["@tanstack/**", "@/integrations/tanstack-query/**"],
+							":BLANK_LINE:",
+							[":PACKAGE:", "!@/components/**"],
+							":BLANK_LINE:",
+							"@/components/**",
+							":BLANK_LINE:",
+							[":ALIAS:", "@/lib/**", "@/hooks/**", "@/data/**"],
+							":BLANK_LINE:",
+							":PATH:"
+						]
+					}
+				}
+			}
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	}
+}
