@@ -55,6 +55,7 @@ Artist Showcase is a single-page application built with React and TypeScript tha
 - **Vite** - Fast build tool and dev server
 - **Zustand** - Lightweight state management for favorites
 - **Recharts** - Beautiful charts for play count visualization
+- **Chakra UI** - Accessible component library with beautiful design system
 
 ### Development Tools
 

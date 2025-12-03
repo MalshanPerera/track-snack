@@ -4,13 +4,14 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import ReactDOM from "react-dom/client";
 
+import { Provider as UIProvider } from "@/components/ui/provider";
+
 import { getContext as getQueryContext } from "./providers/query-provider";
 import { RootProvider } from "./providers/root-provider"; // Import the generated route tree
+import reportWebVitals from "./reportWebVitals.ts";
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
-
-import reportWebVitals from "./reportWebVitals.ts";
 
 // Create a new router instance
 const QueryProviderContext = getQueryContext();
@@ -39,7 +40,9 @@ if (rootElement && !rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<RootProvider queryClient={QueryProviderContext.queryClient}>
-				<RouterProvider router={router} />
+				<UIProvider>
+					<RouterProvider router={router} />
+				</UIProvider>
 			</RootProvider>
 		</StrictMode>,
 	);
