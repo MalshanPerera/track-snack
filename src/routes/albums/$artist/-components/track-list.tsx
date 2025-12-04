@@ -1,21 +1,38 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { Clock, Music, Play } from "lucide-react";
 
+import { FavoriteButton } from "@/components/favorites-button";
+
 import { formatDuration } from "@/lib/utils";
-import type { Track } from "@/types";
+import type { FavoriteTrack, Track } from "@/types";
 
 interface TrackListProps {
 	tracks: Track[];
+	albumName: string;
+	albumArtist: string;
 	totalDuration?: number;
 }
 
 interface TrackItemProps {
 	track: Track;
 	index: number;
+	albumName: string;
+	albumArtist: string;
 }
 
-function TrackItem({ track, index }: TrackItemProps) {
+function TrackItem({ track, index, albumName, albumArtist }: TrackItemProps) {
 	const trackNumber = track.rank || index + 1;
+
+	const favoriteTrack: FavoriteTrack = {
+		name: track.name,
+		artist: track.artist,
+		duration: track.duration,
+		url: track.url,
+		albumName,
+		albumArtist,
+		images: track.images,
+		addedAt: 0,
+	};
 
 	return (
 		<Box
@@ -52,7 +69,6 @@ function TrackItem({ track, index }: TrackItemProps) {
 		>
 			<HStack justify="space-between" gap={4}>
 				<HStack gap={4} flex={1} minW={0}>
-					{/* Track Number / Play Icon */}
 					<Box w="32px" textAlign="center" flexShrink={0}>
 						<Text
 							className="track-number"
@@ -73,7 +89,6 @@ function TrackItem({ track, index }: TrackItemProps) {
 						</Box>
 					</Box>
 
-					{/* Track Info */}
 					<VStack align="start" gap={0} flex={1} minW={0}>
 						<Text
 							fontWeight="semibold"
@@ -103,23 +118,25 @@ function TrackItem({ track, index }: TrackItemProps) {
 					</VStack>
 				</HStack>
 
-				{/* Duration */}
-				{track.duration && track.duration > 0 && (
-					<Text
-						fontSize="sm"
-						color="fg.muted"
-						fontWeight="medium"
-						flexShrink={0}
-					>
-						{formatDuration(track.duration)}
-					</Text>
-				)}
+				<HStack gap={2} flexShrink={0}>
+					{track.duration && track.duration > 0 && (
+						<Text fontSize="sm" color="fg.muted" fontWeight="medium">
+							{formatDuration(track.duration)}
+						</Text>
+					)}
+					<FavoriteButton track={favoriteTrack} size={16} />
+				</HStack>
 			</HStack>
 		</Box>
 	);
 }
 
-export function TrackList({ tracks, totalDuration }: TrackListProps) {
+export function TrackList({
+	tracks,
+	albumName,
+	albumArtist,
+	totalDuration,
+}: TrackListProps) {
 	if (tracks.length === 0) {
 		return (
 			<Box
@@ -152,14 +169,12 @@ export function TrackList({ tracks, totalDuration }: TrackListProps) {
 		);
 	}
 
-	// Calculate total duration if not provided
 	const calculatedDuration =
 		totalDuration ||
 		tracks.reduce((sum, track) => sum + (track.duration || 0), 0);
 
 	return (
 		<VStack align="stretch" gap={0}>
-			{/* Header */}
 			<HStack
 				justify="space-between"
 				px={4}
@@ -187,13 +202,14 @@ export function TrackList({ tracks, totalDuration }: TrackListProps) {
 				)}
 			</HStack>
 
-			{/* Track Items */}
 			<VStack align="stretch" gap={0}>
 				{tracks.map((track, index) => (
 					<TrackItem
 						key={track.url || `${track.name}-${index}`}
 						track={track}
 						index={index}
+						albumName={albumName}
+						albumArtist={albumArtist}
 					/>
 				))}
 			</VStack>

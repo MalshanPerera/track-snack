@@ -1,6 +1,9 @@
 // Re-export pagination types
 export type { PaginatedResponse } from "@/api/types";
 
+// Re-export favourite types
+export type { FavoriteTrack } from "./favorite";
+
 // Domain types for Album and Track
 
 export interface Album {
