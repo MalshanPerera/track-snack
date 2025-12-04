@@ -19,7 +19,13 @@ import {
 } from "@chakra-ui/react";
 import { Disc3 } from "lucide-react";
 
-import { useArtistAlbums, useSortedAlbums } from "@/hooks";
+import { InfiniteScroll } from "@/components/infinite-scroll";
+
+import {
+	getInfiniteArtistAlbumsQueryOptions,
+	useInfiniteArtistAlbums,
+	useSortedAlbums,
+} from "@/hooks";
 import type { Album, SortOption } from "@/types";
 import { SortOptions } from "@/types";
 
@@ -28,6 +34,13 @@ import { AlbumSort } from "./-components/album-sort";
 
 export const Route = createFileRoute("/albums/$artist")({
 	component: ArtistAlbumsPage,
+	loader: async ({ context: { queryClient }, params: { artist } }) => {
+		const decodedArtist = decodeURIComponent(artist);
+		// Prefetch the first page of albums
+		await queryClient.ensureInfiniteQueryData(
+			getInfiniteArtistAlbumsQueryOptions(decodedArtist),
+		);
+	},
 });
 
 function ArtistAlbumsPage() {
@@ -43,10 +56,15 @@ function ArtistAlbumsPage() {
 	});
 
 	const {
-		data: albums = [],
+		albums,
 		isLoading,
 		error,
-	} = useArtistAlbums(decodedArtist, 50, !albumMatch);
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+		prefetchNextPage,
+	} = useInfiniteArtistAlbums(decodedArtist, !albumMatch);
+
 	const sortedAlbums = useSortedAlbums(albums, sortBy);
 
 	const handleAlbumClick = (album: Album) => {
@@ -108,6 +126,7 @@ function ArtistAlbumsPage() {
 							>
 								<Text fontSize="md" color="fg.muted" fontWeight="medium">
 									{albums.length} album{albums.length !== 1 ? "s" : ""} found
+									{hasNextPage && "+"}
 								</Text>
 								<AlbumSort value={sortBy} onChange={setSortBy} />
 							</HStack>
@@ -154,7 +173,14 @@ function ArtistAlbumsPage() {
 				)}
 
 				{!isLoading && !error && (
-					<AlbumGrid albums={sortedAlbums} onAlbumClick={handleAlbumClick} />
+					<InfiniteScroll
+						hasNextPage={hasNextPage}
+						isFetchingNextPage={isFetchingNextPage}
+						fetchNextPage={fetchNextPage}
+						onApproachEnd={prefetchNextPage}
+					>
+						<AlbumGrid albums={sortedAlbums} onAlbumClick={handleAlbumClick} />
+					</InfiniteScroll>
 				)}
 			</Container>
 		</Box>

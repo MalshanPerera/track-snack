@@ -1,3 +1,6 @@
+// Re-export pagination types
+export type { PaginatedResponse } from "@/api/types";
+
 // Domain types for Album and Track
 
 export interface Album {

@@ -7,6 +7,7 @@ import type {
 	LastFmResponse,
 	LastFmTopAlbumsResponse,
 	LastFmTrackDto,
+	PaginatedResponse,
 } from "./types";
 
 const API_BASE_URL = env.VITE_BASE_URL;
@@ -100,13 +101,40 @@ function mapAlbum(dto: LastFmAlbumDto): Album {
 	};
 }
 
+// Helper to calculate pagination from LastFM search response
+function calculateSearchPagination(
+	results: LastFmResponse<unknown>["results"],
+	currentPage: number,
+	perPage: number,
+): { totalPages: number; total: number; hasNextPage: boolean } {
+	const totalResults = parseInt(
+		results?.["opensearch:totalResults"] || "0",
+		10,
+	);
+	const totalPages = Math.ceil(totalResults / perPage);
+	return {
+		total: totalResults,
+		totalPages,
+		hasNextPage: currentPage < totalPages,
+	};
+}
+
 // API functions
 export async function searchAlbums(
 	query: string,
 	limit = 30,
 	page = 1,
-): Promise<Album[]> {
-	if (!query.trim()) return [];
+): Promise<PaginatedResponse<Album>> {
+	if (!query.trim()) {
+		return {
+			data: [],
+			page: 1,
+			perPage: limit,
+			totalPages: 0,
+			total: 0,
+			hasNextPage: false,
+		};
+	}
 
 	const data = await request<LastFmResponse<LastFmAlbumDto>>({
 		method: "album.search",
@@ -116,15 +144,31 @@ export async function searchAlbums(
 	});
 
 	const albums = data.results?.albummatches?.album || [];
-	return albums.map(mapAlbum);
+	const pagination = calculateSearchPagination(data.results, page, limit);
+
+	return {
+		data: albums.map(mapAlbum),
+		page,
+		perPage: limit,
+		...pagination,
+	};
 }
 
 export async function searchTracks(
 	query: string,
 	limit = 30,
 	page = 1,
-): Promise<Track[]> {
-	if (!query.trim()) return [];
+): Promise<PaginatedResponse<Track>> {
+	if (!query.trim()) {
+		return {
+			data: [],
+			page: 1,
+			perPage: limit,
+			totalPages: 0,
+			total: 0,
+			hasNextPage: false,
+		};
+	}
 
 	const data = await request<LastFmResponse<LastFmTrackDto>>({
 		method: "track.search",
@@ -135,7 +179,14 @@ export async function searchTracks(
 
 	const tracks = data.results?.trackmatches?.track || [];
 	const trackArray = Array.isArray(tracks) ? tracks : [tracks];
-	return trackArray.map(mapTrack);
+	const pagination = calculateSearchPagination(data.results, page, limit);
+
+	return {
+		data: trackArray.map(mapTrack),
+		page,
+		perPage: limit,
+		...pagination,
+	};
 }
 
 export async function getAlbumInfo(
@@ -170,27 +221,39 @@ export async function getAlbumInfo(
 
 export async function getArtistAlbums(
 	artist: string,
-	limit = 50,
-): Promise<Album[]> {
+	limit = 30,
+	page = 1,
+): Promise<PaginatedResponse<Album>> {
 	const data = await request<LastFmTopAlbumsResponse>({
 		method: "artist.gettopalbums",
 		artist,
 		limit,
+		page,
 	});
 
 	const albums = data.topalbums?.album || [];
+	const attr = data.topalbums?.["@attr"];
+	const totalPages = attr ? parseInt(attr.totalPages, 10) : 1;
+	const total = attr ? parseInt(attr.total, 10) : albums.length;
 
-	return albums.map((dto) => ({
-		name: dto.name,
-		artist: dto.artist.name,
-		mbid: dto.mbid,
-		url: dto.url,
-		images: dto.image
-			.filter((img) => img["#text"] && img.size)
-			.map((img) => ({
-				url: img["#text"],
-				size: (img.size || "medium") as ImageSize,
-			})),
-		playcount: dto.playcount,
-	}));
+	return {
+		data: albums.map((dto) => ({
+			name: dto.name,
+			artist: dto.artist.name,
+			mbid: dto.mbid,
+			url: dto.url,
+			images: dto.image
+				.filter((img) => img["#text"] && img.size)
+				.map((img) => ({
+					url: img["#text"],
+					size: (img.size || "medium") as ImageSize,
+				})),
+			playcount: dto.playcount,
+		})),
+		page,
+		perPage: limit,
+		totalPages,
+		total,
+		hasNextPage: page < totalPages,
+	};
 }

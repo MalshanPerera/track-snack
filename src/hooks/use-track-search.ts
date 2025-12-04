@@ -11,7 +11,10 @@ export const trackSearchKeys = {
 export function useTrackSearch(query: string, enabled = true) {
 	return useQuery({
 		queryKey: trackSearchKeys.query(query),
-		queryFn: () => searchTracks(query),
+		queryFn: async () => {
+			const result = await searchTracks(query);
+			return result.data;
+		},
 		enabled: enabled && query.length > 0,
 		staleTime: 5 * 60 * 1000, // 5 minutes
 	});

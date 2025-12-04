@@ -4,7 +4,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Container, Heading, VStack } from "@chakra-ui/react";
 
-import { useAlbumSearch, useTrackSearch } from "@/hooks";
+import { useInfiniteAlbumSearch, useInfiniteTrackSearch } from "@/hooks";
 import type { Album, Track } from "@/types";
 
 import { SearchBar } from "./-components/search-bar";
@@ -22,14 +22,23 @@ function SearchPage() {
 	const navigate = useNavigate();
 	const [searchQuery, setSearchQuery] = useState(q);
 
-	const { data: albums = [], isLoading: albumsLoading } = useAlbumSearch(
-		searchQuery,
-		searchQuery.length > 0,
-	);
-	const { data: tracks = [], isLoading: tracksLoading } = useTrackSearch(
-		searchQuery,
-		searchQuery.length > 0,
-	);
+	const {
+		albums,
+		isLoading: albumsLoading,
+		hasNextPage: hasNextAlbumsPage,
+		isFetchingNextPage: isFetchingNextAlbumsPage,
+		fetchNextPage: fetchNextAlbumsPage,
+		prefetchNextPage: prefetchNextAlbumsPage,
+	} = useInfiniteAlbumSearch(searchQuery, searchQuery.length > 0);
+
+	const {
+		tracks,
+		isLoading: tracksLoading,
+		hasNextPage: hasNextTracksPage,
+		isFetchingNextPage: isFetchingNextTracksPage,
+		fetchNextPage: fetchNextTracksPage,
+		prefetchNextPage: prefetchNextTracksPage,
+	} = useInfiniteTrackSearch(searchQuery, searchQuery.length > 0);
 
 	useEffect(() => {
 		setSearchQuery(q);
@@ -76,6 +85,14 @@ function SearchPage() {
 					isLoading={albumsLoading || tracksLoading}
 					onAlbumClick={handleAlbumClick}
 					onTrackClick={handleTrackClick}
+					hasNextAlbumsPage={hasNextAlbumsPage}
+					isFetchingNextAlbumsPage={isFetchingNextAlbumsPage}
+					fetchNextAlbumsPage={fetchNextAlbumsPage}
+					prefetchNextAlbumsPage={prefetchNextAlbumsPage}
+					hasNextTracksPage={hasNextTracksPage}
+					isFetchingNextTracksPage={isFetchingNextTracksPage}
+					fetchNextTracksPage={fetchNextTracksPage}
+					prefetchNextTracksPage={prefetchNextTracksPage}
 				/>
 			</VStack>
 		</Container>

@@ -1,5 +1,26 @@
 // Last.fm API response types
 
+export interface PaginatedResponse<T> {
+	data: T[];
+	page: number;
+	perPage: number;
+	totalPages: number;
+	total: number;
+	hasNextPage: boolean;
+}
+
+export interface LastFmSearchAttr {
+	"opensearch:Query": {
+		"#text": string;
+		role: string;
+		searchTerms: string;
+		startPage: string;
+	};
+	"opensearch:totalResults": string;
+	"opensearch:startIndex": string;
+	"opensearch:itemsPerPage": string;
+}
+
 export interface LastFmResponse<T> {
 	results?: {
 		albummatches?: {
@@ -10,7 +31,8 @@ export interface LastFmResponse<T> {
 		};
 		album?: T;
 		track?: T[];
-	};
+		"@attr"?: LastFmSearchAttr;
+	} & Partial<LastFmSearchAttr>;
 	album?: T;
 	error?: number;
 	message?: string;
