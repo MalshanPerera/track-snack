@@ -1,9 +1,18 @@
-import { Badge, Box, Spinner, Tabs, Text, VStack } from "@chakra-ui/react";
+import {
+	Badge,
+	Box,
+	Flex,
+	Spinner,
+	Tabs,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
 
 import { InfiniteScroll } from "@/components/infinite-scroll";
 
 import { AlbumGrid } from "@/routes/albums/-components/album-grid";
-import type { Album, Track } from "@/types";
+import { AlbumSort } from "@/routes/albums/-components/album-sort";
+import type { Album, SortOption, Track } from "@/types";
 
 import { TrackListItem } from "./track-list-item";
 
@@ -13,6 +22,9 @@ interface SearchResultsProps {
 	isLoading: boolean;
 	onAlbumClick?: (album: Album) => void;
 	onTrackClick?: (track: Track) => void;
+	// Sorting props
+	sortOption?: SortOption;
+	onSortChange?: (value: SortOption) => void;
 	// Infinite scroll props for albums
 	hasNextAlbumsPage?: boolean;
 	isFetchingNextAlbumsPage?: boolean;
@@ -31,6 +43,8 @@ export function SearchResults({
 	isLoading,
 	onAlbumClick,
 	onTrackClick,
+	sortOption,
+	onSortChange,
 	hasNextAlbumsPage = false,
 	isFetchingNextAlbumsPage = false,
 	fetchNextAlbumsPage,
@@ -88,17 +102,26 @@ export function SearchResults({
 					<Box py={8} textAlign="center">
 						<Text color="fg.muted">No albums found</Text>
 					</Box>
-				) : fetchNextAlbumsPage ? (
-					<InfiniteScroll
-						hasNextPage={hasNextAlbumsPage}
-						isFetchingNextPage={isFetchingNextAlbumsPage}
-						fetchNextPage={fetchNextAlbumsPage}
-						onApproachEnd={prefetchNextAlbumsPage}
-					>
-						<AlbumGrid albums={albums} onAlbumClick={onAlbumClick} />
-					</InfiniteScroll>
 				) : (
-					<AlbumGrid albums={albums} onAlbumClick={onAlbumClick} />
+					<VStack gap={4} align="stretch">
+						{sortOption && onSortChange && (
+							<Flex justify="flex-end">
+								<AlbumSort value={sortOption} onChange={onSortChange} />
+							</Flex>
+						)}
+						{fetchNextAlbumsPage ? (
+							<InfiniteScroll
+								hasNextPage={hasNextAlbumsPage}
+								isFetchingNextPage={isFetchingNextAlbumsPage}
+								fetchNextPage={fetchNextAlbumsPage}
+								onApproachEnd={prefetchNextAlbumsPage}
+							>
+								<AlbumGrid albums={albums} onAlbumClick={onAlbumClick} />
+							</InfiniteScroll>
+						) : (
+							<AlbumGrid albums={albums} onAlbumClick={onAlbumClick} />
+						)}
+					</VStack>
 				)}
 			</Tabs.Content>
 			<Tabs.Content value="tracks" pt={6}>

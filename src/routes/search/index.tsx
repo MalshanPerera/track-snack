@@ -4,8 +4,13 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Container, Heading, VStack } from "@chakra-ui/react";
 
-import { useInfiniteAlbumSearch, useInfiniteTrackSearch } from "@/hooks";
-import type { Album, Track } from "@/types";
+import {
+	useInfiniteAlbumSearch,
+	useInfiniteTrackSearch,
+	useSortedAlbums,
+} from "@/hooks";
+import type { Album, SortOption, Track } from "@/types";
+import { SortOptions } from "@/types";
 
 import { SearchBar } from "./-components/search-bar";
 import { SearchResults } from "./-components/search-results";
@@ -21,15 +26,20 @@ function SearchPage() {
 	const { q } = Route.useSearch();
 	const navigate = useNavigate();
 	const [searchQuery, setSearchQuery] = useState(q);
+	const [sortOption, setSortOption] = useState<SortOption>(
+		SortOptions.NAME_ASC,
+	);
 
 	const {
-		albums,
+		albums: rawAlbums,
 		isLoading: albumsLoading,
 		hasNextPage: hasNextAlbumsPage,
 		isFetchingNextPage: isFetchingNextAlbumsPage,
 		fetchNextPage: fetchNextAlbumsPage,
 		prefetchNextPage: prefetchNextAlbumsPage,
 	} = useInfiniteAlbumSearch(searchQuery, searchQuery.length > 0);
+
+	const albums = useSortedAlbums(rawAlbums, sortOption);
 
 	const {
 		tracks,
@@ -63,10 +73,9 @@ function SearchPage() {
 	};
 
 	const handleTrackClick = (track: Track) => {
-		const artistName = track.artist.name;
 		navigate({
 			to: "/albums/$artist",
-			params: { artist: encodeURIComponent(artistName) },
+			params: { artist: encodeURIComponent(track.artist.name) },
 		});
 	};
 
@@ -85,6 +94,8 @@ function SearchPage() {
 					isLoading={albumsLoading || tracksLoading}
 					onAlbumClick={handleAlbumClick}
 					onTrackClick={handleTrackClick}
+					sortOption={sortOption}
+					onSortChange={setSortOption}
 					hasNextAlbumsPage={hasNextAlbumsPage}
 					isFetchingNextAlbumsPage={isFetchingNextAlbumsPage}
 					fetchNextAlbumsPage={fetchNextAlbumsPage}
