@@ -11,7 +11,7 @@ import { RootProvider } from "./providers/root-provider"; // Import the generate
 import reportWebVitals from "./reportWebVitals.ts";
 import { routeTree } from "./routeTree.gen";
 
-import "./styles.css";
+import "./styles/variables.css";
 
 // Create a new router instance
 const QueryProviderContext = getQueryContext();

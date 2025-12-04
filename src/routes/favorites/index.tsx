@@ -19,6 +19,7 @@ import type { FavoriteTrack } from "@/types";
 
 import { FavoriteList } from "./-components/favorite-list";
 import { QuickAddButton, QuickAddModal } from "./-components/quick-add-modal";
+import styles from "./favorites.module.css";
 
 export const Route = createFileRoute("/favorites/")({
 	component: FavoritesPage,
@@ -67,12 +68,10 @@ function FavoritesPage() {
 				>
 					<HStack gap={4} align="center">
 						<Box
+							className={styles.headerIcon}
 							p={3}
 							borderRadius="xl"
 							bg="red.500/10"
-							display="flex"
-							alignItems="center"
-							justifyContent="center"
 						>
 							<Heart
 								size={28}
@@ -107,18 +106,11 @@ function FavoritesPage() {
 				{/* Filter Section */}
 				{favorites.length > 0 && (
 					<Box mb={6} position="relative">
-						<Box
-							position="absolute"
-							left={4}
-							top="50%"
-							transform="translateY(-50%)"
-							zIndex={1}
-							pointerEvents="none"
-							css={{ color: "fg.muted" }}
-						>
+						<Box className={styles.filterIcon}>
 							<Search size={20} />
 						</Box>
 						<Input
+							className={styles.filterInput}
 							value={filterQuery}
 							onChange={(e) => setFilterQuery(e.target.value)}
 							placeholder="Filter favourites by title, artist, or album..."
@@ -126,11 +118,9 @@ function FavoritesPage() {
 							borderColor="border.emphasized"
 							pl={12}
 							size="lg"
-							css={{
-								_focus: {
-									borderColor: "primary.500",
-									boxShadow: "0 0 0 1px var(--chakra-colors-primary-500)",
-								},
+							_focus={{
+								borderColor: "primary.500",
+								boxShadow: "0 0 0 1px var(--chakra-colors-primary-500)",
 							}}
 						/>
 					</Box>

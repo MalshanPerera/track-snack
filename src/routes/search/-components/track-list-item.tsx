@@ -5,6 +5,8 @@ import { FavoriteButton } from "@/components/favorites-button";
 import { formatDuration, getAlbumImage } from "@/lib/utils";
 import type { FavoriteTrack, Track } from "@/types";
 
+import styles from "./track-list-item.module.css";
+
 interface TrackListItemProps {
 	track: Track;
 	onClick?: () => void;
@@ -30,6 +32,7 @@ export function TrackListItem({ track, onClick }: TrackListItemProps) {
 
 	return (
 		<Box
+			className={onClick ? styles.item : undefined}
 			p={4}
 			borderRadius="md"
 			borderWidth="1px"
@@ -37,52 +40,32 @@ export function TrackListItem({ track, onClick }: TrackListItemProps) {
 			bg="bg.subtle"
 			cursor={onClick ? "pointer" : "default"}
 			onClick={onClick}
-			css={{
-				_hover: onClick
+			_hover={
+				onClick
 					? {
 							bg: "bg.muted",
 							borderColor: "primary.500",
-							transform: "translateX(4px)",
-							transition: "all 0.2s ease-in-out",
 						}
-					: {},
-			}}
+					: undefined
+			}
 		>
 			<HStack gap={4} align="center">
 				{imageUrl && (
 					<Image
+						className={styles.thumbnail}
 						src={imageUrl}
 						alt={track.name}
 						width="60px"
 						height="60px"
 						borderRadius="md"
 						objectFit="cover"
-						flexShrink={0}
 					/>
 				)}
 				<VStack align="start" gap={1} flex={1} minW={0}>
-					<Text
-						fontWeight="semibold"
-						fontSize="md"
-						css={{
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-							width: "100%",
-						}}
-					>
+					<Text className={styles.truncate} fontWeight="semibold" fontSize="md">
 						{track.name}
 					</Text>
-					<Text
-						fontSize="sm"
-						color="fg.muted"
-						css={{
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-							width: "100%",
-						}}
-					>
+					<Text className={styles.truncate} fontSize="sm" color="fg.muted">
 						{artistName}
 					</Text>
 				</VStack>

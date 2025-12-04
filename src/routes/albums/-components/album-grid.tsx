@@ -4,6 +4,7 @@ import { Disc3 } from "lucide-react";
 import type { Album } from "@/types";
 
 import { AlbumCard } from "./album-card";
+import styles from "./album-grid.module.css";
 
 interface AlbumGridProps {
 	albums: Album[];
@@ -13,21 +14,9 @@ interface AlbumGridProps {
 export function AlbumGrid({ albums, onAlbumClick }: AlbumGridProps) {
 	if (albums.length === 0) {
 		return (
-			<Box
-				py={16}
-				textAlign="center"
-				css={{
-					animation: "fadeIn 0.5s ease-out",
-					"@keyframes fadeIn": {
-						from: { opacity: 0 },
-						to: { opacity: 1 },
-					},
-				}}
-			>
+			<Box className={styles.emptyState} py={16} textAlign="center">
 				<Box
-					display="inline-flex"
-					alignItems="center"
-					justifyContent="center"
+					className={styles.emptyIcon}
 					w={20}
 					h={20}
 					borderRadius="full"
@@ -47,19 +36,7 @@ export function AlbumGrid({ albums, onAlbumClick }: AlbumGridProps) {
 	}
 
 	return (
-		<Box
-			css={{
-				animation: "gridFadeIn 0.3s ease-out",
-				"@keyframes gridFadeIn": {
-					from: {
-						opacity: 0,
-					},
-					to: {
-						opacity: 1,
-					},
-				},
-			}}
-		>
+		<Box className={styles.gridContainer}>
 			<SimpleGrid
 				columns={{ base: 2, sm: 2, md: 3, lg: 4, xl: 5 }}
 				gap={{ base: 4, md: 6, lg: 8 }}

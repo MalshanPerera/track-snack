@@ -6,6 +6,8 @@ import { FavoriteButton } from "@/components/favorites-button";
 import { formatDuration } from "@/lib/utils";
 import type { FavoriteTrack, Track } from "@/types";
 
+import styles from "./track-list.module.css";
+
 interface TrackListProps {
 	tracks: Track[];
 	albumName: string;
@@ -36,83 +38,33 @@ function TrackItem({ track, index, albumName, albumArtist }: TrackItemProps) {
 
 	return (
 		<Box
+			className={styles.trackItem}
+			style={{ "--stagger-delay": `${index * 30}ms` } as React.CSSProperties}
 			p={4}
 			borderRadius="lg"
-			css={{
-				"--stagger-delay": `${index * 30}ms`,
-				animation: "trackSlideIn 0.4s ease-out forwards",
-				animationDelay: "var(--stagger-delay)",
-				opacity: 0,
-				"@keyframes trackSlideIn": {
-					"0%": {
-						opacity: 0,
-						transform: "translateX(-10px)",
-					},
-					"100%": {
-						opacity: 1,
-						transform: "translateX(0)",
-					},
-				},
-				bg: index % 2 === 0 ? "bg.subtle" : "transparent",
-				transition: "all 0.2s ease",
-				cursor: "pointer",
-				"&:hover": {
-					bg: "bg.muted",
-					"& .track-number": {
-						display: "none",
-					},
-					"& .play-icon": {
-						display: "flex",
-					},
-				},
-			}}
+			bg={index % 2 === 0 ? "bg.subtle" : "transparent"}
 		>
 			<HStack justify="space-between" gap={4}>
 				<HStack gap={4} flex={1} minW={0}>
 					<Box w="32px" textAlign="center" flexShrink={0}>
-						<Text
-							className="track-number"
-							fontSize="sm"
-							fontWeight="semibold"
-							color="fg.muted"
-						>
+						<Text className={styles.trackNumber} color="fg.muted">
 							{trackNumber}
 						</Text>
-						<Box
-							className="play-icon"
-							display="none"
-							alignItems="center"
-							justifyContent="center"
-							color="primary.500"
-						>
+						<Box className={styles.playIcon} color="primary.500">
 							<Play size={16} fill="currentColor" />
 						</Box>
 					</Box>
 
 					<VStack align="start" gap={0} flex={1} minW={0}>
 						<Text
+							className={styles.truncate}
 							fontWeight="semibold"
 							fontSize="md"
 							color="fg.default"
-							css={{
-								overflow: "hidden",
-								textOverflow: "ellipsis",
-								whiteSpace: "nowrap",
-								width: "100%",
-							}}
 						>
 							{track.name}
 						</Text>
-						<Text
-							fontSize="sm"
-							color="fg.muted"
-							css={{
-								overflow: "hidden",
-								textOverflow: "ellipsis",
-								whiteSpace: "nowrap",
-								width: "100%",
-							}}
-						>
+						<Text className={styles.truncate} fontSize="sm" color="fg.muted">
 							{track.artist.name}
 						</Text>
 					</VStack>
@@ -139,21 +91,9 @@ export function TrackList({
 }: TrackListProps) {
 	if (tracks.length === 0) {
 		return (
-			<Box
-				py={12}
-				textAlign="center"
-				css={{
-					animation: "fadeIn 0.5s ease-out",
-					"@keyframes fadeIn": {
-						from: { opacity: 0 },
-						to: { opacity: 1 },
-					},
-				}}
-			>
+			<Box className={styles.emptyState} py={12} textAlign="center">
 				<Box
-					display="inline-flex"
-					alignItems="center"
-					justifyContent="center"
+					className={styles.emptyIcon}
 					w={16}
 					h={16}
 					borderRadius="full"

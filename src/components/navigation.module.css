@@ -1,0 +1,37 @@
+.navbar {
+  backdrop-filter: blur(10px);
+}
+
+.mobileMenu {
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.mobileMenuOpen {
+  max-height: 400px;
+  opacity: 1;
+}
+
+.mobileMenuClosed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.mobileOverlay {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

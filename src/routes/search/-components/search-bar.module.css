@@ -1,0 +1,24 @@
+.searchIcon {
+  position: absolute;
+  left: var(--chakra-space-3, 0.75rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+  color: var(--chakra-colors-fg-muted);
+}
+
+.searchInput {
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus {
+  border-color: var(--chakra-colors-primary-500);
+  box-shadow: 0 0 0 1px var(--chakra-colors-primary-500);
+}
+
+.clearButton {
+  min-width: auto;
+  padding-left: var(--chakra-space-2, 0.5rem);
+  padding-right: var(--chakra-space-2, 0.5rem);
+}

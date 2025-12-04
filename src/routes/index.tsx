@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { Music } from "lucide-react";
 
+import styles from "./home.module.css";
 import { SearchBar } from "./search/-components/search-bar";
 
 export const Route = createFileRoute("/")({
@@ -34,30 +35,10 @@ function HomePage() {
 			<VStack gap={8} alignItems="center" textAlign="center">
 				{/* Hero Section */}
 				<VStack gap={4}>
-					<Box
-						css={{
-							width: "80px",
-							height: "80px",
-							borderRadius: "full",
-							bg: "primary.500",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							mb: 4,
-						}}
-					>
+					<Box className={styles.heroIcon} bg="primary.500">
 						<Music size={40} color="white" />
 					</Box>
-					<Heading
-						size="3xl"
-						css={{
-							background:
-								"linear-gradient(to right, var(--chakra-colors-primary-500), var(--chakra-colors-accent-500))",
-							WebkitBackgroundClip: "text",
-							WebkitTextFillColor: "transparent",
-							backgroundClip: "text",
-						}}
-					>
+					<Heading size="3xl" className={styles.gradientTitle}>
 						Track Snack
 					</Heading>
 					<Text fontSize="xl" color="fg.muted" maxW="600px">

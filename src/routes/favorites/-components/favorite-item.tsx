@@ -6,6 +6,8 @@ import { FavoriteButton } from "@/components/favorites-button";
 import { formatDuration, getAlbumImage } from "@/lib/utils";
 import type { FavoriteTrack } from "@/types";
 
+import styles from "./favorite-item.module.css";
+
 interface FavoriteItemProps {
 	track: FavoriteTrack;
 	onClick: () => void;
@@ -19,41 +21,24 @@ export function FavoriteItem({ track, onClick }: FavoriteItemProps) {
 
 	return (
 		<Box
+			className={styles.item}
 			p={4}
 			borderRadius="lg"
 			borderWidth="1px"
 			borderColor="border.emphasized"
 			bg="bg.subtle"
-			css={{
-				transition: "all 0.2s ease",
-				"&:hover": {
-					bg: "bg.muted",
-					borderColor: "primary.500",
-					transform: "translateX(4px)",
-				},
+			_hover={{
+				bg: "bg.muted",
+				borderColor: "primary.500",
 			}}
 		>
 			<HStack gap={4} align="center">
-				<Box
-					onClick={onClick}
-					cursor="pointer"
-					flexShrink={0}
-					width="60px"
-					height="60px"
-					borderRadius="md"
-					overflow="hidden"
-					bg="bg.muted"
-					display="flex"
-					alignItems="center"
-					justifyContent="center"
-				>
+				<Box className={styles.thumbnail} onClick={onClick} bg="bg.muted">
 					{imageUrl ? (
 						<Image
+							className={styles.thumbnailImage}
 							src={imageUrl}
 							alt={track.name}
-							width="100%"
-							height="100%"
-							objectFit="cover"
 						/>
 					) : (
 						<Disc3
@@ -71,40 +56,13 @@ export function FavoriteItem({ track, onClick }: FavoriteItemProps) {
 					onClick={onClick}
 					cursor="pointer"
 				>
-					<Text
-						fontWeight="semibold"
-						fontSize="md"
-						css={{
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-							width: "100%",
-						}}
-					>
+					<Text className={styles.truncate} fontWeight="semibold" fontSize="md">
 						{track.name}
 					</Text>
-					<Text
-						fontSize="sm"
-						color="fg.muted"
-						css={{
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-							width: "100%",
-						}}
-					>
+					<Text className={styles.truncate} fontSize="sm" color="fg.muted">
 						{track.artist.name}
 					</Text>
-					<Text
-						fontSize="xs"
-						color="fg.subtle"
-						css={{
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-							width: "100%",
-						}}
-					>
+					<Text className={styles.truncate} fontSize="xs" color="fg.subtle">
 						{track.albumName}
 					</Text>
 				</VStack>

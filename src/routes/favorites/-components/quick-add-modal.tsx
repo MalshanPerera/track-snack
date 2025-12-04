@@ -23,6 +23,8 @@ import { formatDuration, getAlbumImage } from "@/lib/utils";
 import { getTrackKey, useFavoritesStore } from "@/stores/favorites-store";
 import type { FavoriteTrack, Track } from "@/types";
 
+import styles from "./quick-add-modal.module.css";
+
 interface QuickAddModalProps {
 	isOpen: boolean;
 	onClose: () => void;
@@ -52,27 +54,25 @@ function TrackSearchItem({ track }: { track: Track }) {
 
 	return (
 		<HStack
+			className={styles.trackItem}
 			p={3}
 			borderRadius="lg"
 			bg={isFavorited ? "primary.500/5" : "bg.subtle"}
 			borderWidth="1px"
 			borderColor={isFavorited ? "primary.500/30" : "border.muted"}
 			gap={3}
-			css={{
-				transition: "all 0.2s ease",
-				"&:hover": {
-					bg: isFavorited ? "primary.500/10" : "bg.muted",
-				},
+			_hover={{
+				bg: isFavorited ? "primary.500/10" : "bg.muted",
 			}}
 		>
 			{/* Track Image */}
 			<Box
+				className={styles.thumbnail}
 				w="48px"
 				h="48px"
 				borderRadius="md"
 				overflow="hidden"
 				bg="bg.muted"
-				flexShrink={0}
 			>
 				{imageUrl ? (
 					<Image
@@ -83,41 +83,23 @@ function TrackSearchItem({ track }: { track: Track }) {
 						objectFit="cover"
 					/>
 				) : (
-					<Box
-						w="100%"
-						h="100%"
-						display="flex"
-						alignItems="center"
-						justifyContent="center"
-					>
-						<Text fontSize="xl">🎵</Text>
-					</Box>
+					<Text fontSize="xl">🎵</Text>
 				)}
 			</Box>
 
 			{/* Track Info */}
 			<VStack align="start" gap={0} flex={1} minW={0}>
 				<Text
+					className={styles.truncate}
 					fontWeight="semibold"
 					fontSize="sm"
-					css={{
-						overflow: "hidden",
-						textOverflow: "ellipsis",
-						whiteSpace: "nowrap",
-						width: "100%",
-					}}
 				>
 					{track.name}
 				</Text>
 				<Text
+					className={styles.truncate}
 					fontSize="xs"
 					color="fg.muted"
-					css={{
-						overflow: "hidden",
-						textOverflow: "ellipsis",
-						whiteSpace: "nowrap",
-						width: "100%",
-					}}
 				>
 					{track.artist.name}
 				</Text>
@@ -178,12 +160,7 @@ export function QuickAddModal({ isOpen, onClose }: QuickAddModalProps) {
 			size="lg"
 		>
 			<Portal>
-				<Dialog.Backdrop
-					css={{
-						backdropFilter: "blur(4px)",
-						bg: "blackAlpha.600",
-					}}
-				/>
+				<Dialog.Backdrop className={styles.backdrop} bg="blackAlpha.600" />
 				<Dialog.Positioner>
 					<Dialog.Content
 						maxH="80vh"
@@ -217,18 +194,11 @@ export function QuickAddModal({ isOpen, onClose }: QuickAddModalProps) {
 								<form onSubmit={handleSearch}>
 									<HStack gap={2}>
 										<Box position="relative" flex={1}>
-											<Box
-												position="absolute"
-												left={3}
-												top="50%"
-												transform="translateY(-50%)"
-												zIndex={1}
-												pointerEvents="none"
-												css={{ color: "fg.muted" }}
-											>
+											<Box className={styles.searchIcon}>
 												<Search size={18} />
 											</Box>
 											<Input
+												className={styles.searchInput}
 												value={searchQuery}
 												onChange={(e) => setSearchQuery(e.target.value)}
 												placeholder="Search for songs..."
@@ -236,12 +206,9 @@ export function QuickAddModal({ isOpen, onClose }: QuickAddModalProps) {
 												size="md"
 												bg="bg.subtle"
 												borderColor="border.emphasized"
-												css={{
-													_focus: {
-														borderColor: "primary.500",
-														boxShadow:
-															"0 0 0 1px var(--chakra-colors-primary-500)",
-													},
+												_focus={{
+													borderColor: "primary.500",
+													boxShadow: "0 0 0 1px var(--chakra-colors-primary-500)",
 												}}
 											/>
 										</Box>
@@ -261,13 +228,11 @@ export function QuickAddModal({ isOpen, onClose }: QuickAddModalProps) {
 								{!submittedQuery ? (
 									<VStack gap={4} py={8}>
 										<Box
+											className={styles.emptyIcon}
 											w={16}
 											h={16}
 											borderRadius="full"
 											bg="primary.500/10"
-											display="flex"
-											alignItems="center"
-											justifyContent="center"
 										>
 											<Search
 												size={32}
@@ -348,9 +313,7 @@ export function QuickAddButton({ onClick }: QuickAddButtonProps) {
 			onClick={onClick}
 			colorPalette="primary"
 			size="md"
-			css={{
-				gap: 2,
-			}}
+			gap={2}
 		>
 			<Plus size={18} />
 			<Text display={{ base: "none", sm: "inline" }}>Quick Add</Text>

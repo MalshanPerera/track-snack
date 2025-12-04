@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { BarChart3, Heart, Home, Menu, Music, X } from "lucide-react";
 
+import styles from "./navigation.module.css";
+
 const navItems = [
 	{ to: "/", label: "Home", icon: Home },
 	{ to: "/best-played", label: "Best Played", icon: BarChart3 },
@@ -30,16 +32,13 @@ export function Navigation() {
 	return (
 		<Box
 			as="nav"
+			className={styles.navbar}
 			borderBottom="1px solid"
 			borderColor="border.emphasized"
-			bg="bg.surface"
+			bg="bg.surface/80"
 			position="sticky"
 			top={0}
 			zIndex={100}
-			css={{
-				backdropFilter: "blur(10px)",
-				bg: "bg.surface / 80",
-			}}
 		>
 			<Container maxW="container.xl">
 				<HStack justify="space-between" py={4} gap={6}>
@@ -47,12 +46,10 @@ export function Navigation() {
 					<Link to="/" onClick={closeMobileMenu}>
 						<HStack gap={2} align="center">
 							<Box
+								className={styles.logoIcon}
 								p={1.5}
 								borderRadius="lg"
 								bg="primary.500"
-								display="flex"
-								alignItems="center"
-								justifyContent="center"
 							>
 								<Music size={20} color="white" />
 							</Box>
@@ -102,13 +99,8 @@ export function Navigation() {
 
 			{/* Mobile Menu Dropdown */}
 			<Box
+				className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.mobileMenuOpen : styles.mobileMenuClosed}`}
 				display={{ base: "block", md: "none" }}
-				overflow="hidden"
-				css={{
-					maxHeight: isMobileMenuOpen ? "400px" : "0",
-					opacity: isMobileMenuOpen ? 1 : 0,
-					transition: "all 0.3s ease-in-out",
-				}}
 			>
 				<Container maxW="container.xl" pb={4}>
 					<VStack gap={2} align="stretch">
@@ -142,6 +134,7 @@ export function Navigation() {
 			{/* Mobile Menu Overlay */}
 			{isMobileMenuOpen && (
 				<Box
+					className={styles.mobileOverlay}
 					position="fixed"
 					inset={0}
 					top="73px"
@@ -149,13 +142,6 @@ export function Navigation() {
 					zIndex={-1}
 					onClick={closeMobileMenu}
 					display={{ base: "block", md: "none" }}
-					css={{
-						animation: "fadeIn 0.2s ease-out",
-						"@keyframes fadeIn": {
-							from: { opacity: 0 },
-							to: { opacity: 1 },
-						},
-					}}
 				/>
 			)}
 		</Box>

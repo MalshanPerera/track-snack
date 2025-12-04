@@ -1,0 +1,145 @@
+.blurredBg {
+  position: absolute;
+  inset: 0;
+}
+
+.blurredBg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(60px) saturate(1.5);
+  transform: scale(1.2);
+  opacity: 0.4;
+}
+
+.blurredBg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--chakra-colors-bg-canvas) 100%
+  );
+}
+
+.albumCover {
+  animation: albumFadeIn 0.6s ease-out;
+}
+
+@keyframes albumFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.albumCoverContainer {
+  position: relative;
+  border-radius: var(--chakra-radii-xl, 0.75rem);
+  overflow: hidden;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.albumCoverContainer:hover {
+  transform: scale(1.02);
+}
+
+.albumCoverContainer:hover .playOverlay {
+  opacity: 1;
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.playButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: var(--chakra-space-5, 1.25rem);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.albumInfo {
+  animation: infoSlideIn 0.6s ease-out;
+  animation-delay: 0.1s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes infoSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.artistLink {
+  transition: color 0.2s ease;
+}
+
+.artistLink:hover {
+  color: var(--chakra-colors-primary-500);
+}
+
+.wikiTruncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.backButton {
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  color: var(--chakra-colors-fg-default);
+  background-color: var(--chakra-colors-bg-muted);
+}
+
+.trackListContainer {
+  animation: trackListFadeIn 0.6s ease-out;
+  animation-delay: 0.3s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes trackListFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.readMoreButton {
+  transition: background-color 0.2s ease;
+}
+
+.readMoreButton:hover {
+  background-color: var(--chakra-colors-primary-500 / 10%);
+}

@@ -6,6 +6,8 @@ import { Heart } from "lucide-react";
 import { getTrackKey, useFavoritesStore } from "@/stores/favorites-store";
 import type { FavoriteTrack } from "@/types";
 
+import styles from "./favorites-button.module.css";
+
 interface FavoriteButtonProps {
 	track: FavoriteTrack;
 	size?: number;
@@ -34,25 +36,11 @@ export function FavoriteButton({ track, size = 18 }: FavoriteButtonProps) {
 
 	return (
 		<Button
+			className={`${styles.button} ${isFavoriteTrack ? styles.favorited : styles.notFavorited}`}
 			onClick={handleClick}
 			p={2}
 			borderRadius="full"
-			display="flex"
-			alignItems="center"
-			justifyContent="center"
-			css={{
-				color: isFavoriteTrack ? "var(--chakra-colors-red-500)" : "fg.muted",
-				transition: "all 0.2s ease",
-				cursor: "pointer",
-				"&:hover": {
-					color: "var(--chakra-colors-red-500)",
-					bg: "var(--chakra-colors-red-500/10)",
-					transform: "scale(1.1)",
-				},
-				"&:active": {
-					transform: "scale(0.95)",
-				},
-			}}
+			variant="ghost"
 			aria-label={
 				isFavoriteTrack ? "Remove from favorites" : "Add to favorites"
 			}
