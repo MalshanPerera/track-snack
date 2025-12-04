@@ -16,7 +16,7 @@ import { useArtistTopAlbums } from "@/hooks";
 import { SearchBar } from "@/routes/search/-components/search-bar";
 import { useBestPlayedStore } from "@/stores/best-played-store";
 
-import { type ChartAlbumData, AlbumChart } from "./-components/album-chart";
+import { AlbumChart, type ChartAlbumData } from "./-components/album-chart";
 import { Pagination } from "./-components/pagination";
 
 export const Route = createFileRoute("/best-played/")({
@@ -35,10 +35,12 @@ function BestPlayedPage() {
 
 	const isSearching = searchQuery.trim().length > 0;
 
-	const {
-		data: artistAlbumsData,
-		isLoading,
-	} = useArtistTopAlbums(searchQuery, currentPage, ITEMS_PER_PAGE, isSearching);
+	const { data: artistAlbumsData, isLoading } = useArtistTopAlbums(
+		searchQuery,
+		currentPage,
+		ITEMS_PER_PAGE,
+		isSearching,
+	);
 
 	const handleSearch = (query: string) => {
 		setSearchQuery(query);
@@ -50,6 +52,9 @@ function BestPlayedPage() {
 			params: {
 				artist: albumData.artist,
 				album: albumData.name,
+			},
+			search: {
+				from: "best-played",
 			},
 		});
 	};
@@ -110,7 +115,8 @@ function BestPlayedPage() {
 										Search for an Artist
 									</Heading>
 									<Text color="fg.muted" textAlign="center" maxW="md">
-										Enter an artist name above to see their top albums ranked by play count
+										Enter an artist name above to see their top albums ranked by
+										play count
 									</Text>
 								</VStack>
 							</VStack>
@@ -148,7 +154,8 @@ function BestPlayedPage() {
 											<Text color="fg.muted">Loading albums...</Text>
 										</VStack>
 									</Box>
-								) : artistAlbumsData?.data && artistAlbumsData.data.length > 0 ? (
+								) : artistAlbumsData?.data &&
+									artistAlbumsData.data.length > 0 ? (
 									<VStack gap={6} align="stretch">
 										<AlbumChart
 											albums={artistAlbumsData.data}
@@ -166,7 +173,8 @@ function BestPlayedPage() {
 								) : (
 									<Box py={8} textAlign="center">
 										<Text color="fg.muted">
-											No albums found for "{searchQuery}". Try a different artist name.
+											No albums found for "{searchQuery}". Try a different
+											artist name.
 										</Text>
 									</Box>
 								)}

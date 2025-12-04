@@ -28,15 +28,27 @@ import { formatPlayCount, getAlbumImage } from "@/lib/utils";
 
 import { TrackList } from "./-components/track-list";
 
+type AlbumSearchParams = {
+	from?: "best-played";
+};
+
 export const Route = createFileRoute("/albums/$artist/$album")({
 	component: AlbumDetailPage,
+	validateSearch: (search: Record<string, unknown>): AlbumSearchParams => {
+		return {
+			from: search.from === "best-played" ? "best-played" : undefined,
+		};
+	},
 });
 
 function AlbumDetailPage() {
 	const { artist, album } = Route.useParams();
+	const { from } = Route.useSearch();
 	const decodedArtist = decodeURIComponent(artist);
 	const decodedAlbum = decodeURIComponent(album);
 	const [isWikiExpanded, setIsWikiExpanded] = useState(false);
+
+	const isFromBestPlayed = from === "best-played";
 
 	const {
 		data: albumData,
@@ -99,12 +111,21 @@ function AlbumDetailPage() {
 									: "We couldn't find this album. It may have been removed or the link is incorrect."}
 							</Text>
 						</VStack>
-						<Link to="/albums/$artist" params={{ artist }}>
-							<Button colorPalette="primary" size="lg">
-								<ArrowLeft size={18} />
-								Back to Artist
-							</Button>
-						</Link>
+						{isFromBestPlayed ? (
+							<Link to="/best-played">
+								<Button colorPalette="primary" size="lg">
+									<ArrowLeft size={18} />
+									Back to Best Played
+								</Button>
+							</Link>
+						) : (
+							<Link to="/albums/$artist" params={{ artist }}>
+								<Button colorPalette="primary" size="lg">
+									<ArrowLeft size={18} />
+									Back to Artist
+								</Button>
+							</Link>
+						)}
 					</VStack>
 				</Container>
 			</Box>
@@ -156,23 +177,43 @@ function AlbumDetailPage() {
 				{/* Hero Content */}
 				<Container maxW="container.xl" position="relative" zIndex={1} py={8}>
 					{/* Back Button */}
-					<Link to="/albums/$artist" params={{ artist }}>
-						<Button
-							variant="ghost"
-							size="sm"
-							mb={6}
-							css={{
-								color: "fg.muted",
-								_hover: {
-									color: "fg.default",
-									bg: "bg.muted",
-								},
-							}}
-						>
-							<ArrowLeft size={16} />
-							Back to {decodedArtist}
-						</Button>
-					</Link>
+					{isFromBestPlayed ? (
+						<Link to="/best-played">
+							<Button
+								variant="ghost"
+								size="sm"
+								mb={6}
+								css={{
+									color: "fg.muted",
+									_hover: {
+										color: "fg.default",
+										bg: "bg.muted",
+									},
+								}}
+							>
+								<ArrowLeft size={16} />
+								Back to Best Played
+							</Button>
+						</Link>
+					) : (
+						<Link to="/albums/$artist" params={{ artist }}>
+							<Button
+								variant="ghost"
+								size="sm"
+								mb={6}
+								css={{
+									color: "fg.muted",
+									_hover: {
+										color: "fg.default",
+										bg: "bg.muted",
+									},
+								}}
+							>
+								<ArrowLeft size={16} />
+								Back to {decodedArtist}
+							</Button>
+						</Link>
+					)}
 
 					<HStack
 						gap={{ base: 6, md: 10 }}
