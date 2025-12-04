@@ -1,10 +1,16 @@
+import { Center, Heading, Text, VStack } from "@chakra-ui/react";
+
 export default function NotFound() {
 	return (
-		<div className="flex min-h-screen items-center justify-center">
-			<div className="text-center">
-				<h1 className="font-bold text-4xl">404</h1>
-				<p className="mt-4 text-xl">Page not found</p>
-			</div>
-		</div>
+		<Center minH="100vh">
+			<VStack textAlign="center">
+				<Heading size="4xl" fontWeight="bold">
+					404
+				</Heading>
+				<Text fontSize="xl" mt={4}>
+					Page not found
+				</Text>
+			</VStack>
+		</Center>
 	);
 }
