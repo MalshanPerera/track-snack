@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Outlet,
+	useMatch,
+	useNavigate,
+} from "@tanstack/react-router";
 
 import {
 	Alert,
@@ -34,22 +39,33 @@ function ArtistAlbumsPage() {
 	const [sortBy, setSortBy] = useState<SortOption>(SortOptions.NAME_ASC);
 	const decodedArtist = decodeURIComponent(artist);
 
+	// Check if we're on a child route (album detail)
+	const albumMatch = useMatch({
+		from: "/albums/$artist/$album",
+		shouldThrow: false,
+	});
+
 	const {
 		data: albums = [],
 		isLoading,
 		error,
-	} = useArtistAlbums(decodedArtist);
+	} = useArtistAlbums(decodedArtist, 50, !albumMatch);
 	const sortedAlbums = useSortedAlbums(albums, sortBy);
 
 	const handleAlbumClick = (album: Album) => {
 		navigate({
 			to: "/albums/$artist/$album",
 			params: {
-				artist: encodeURIComponent(album.artist),
-				album: encodeURIComponent(album.name),
+				artist: album.artist,
+				album: album.name,
 			},
 		});
 	};
+
+	// If on album detail route, render the child route
+	if (albumMatch) {
+		return <Outlet />;
+	}
 
 	return (
 		<Box minH="100vh" bg="bg.canvas">
