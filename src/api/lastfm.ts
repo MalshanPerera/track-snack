@@ -1,5 +1,12 @@
 import { env } from "@/env";
-import type { Album, AlbumImage, ImageSize, Track, TrackArtist } from "@/types";
+import type {
+	Album,
+	AlbumImage,
+	ImageSize,
+	PaginatedResponse,
+	Track,
+	TrackArtist,
+} from "@/types";
 
 import type {
 	LastFmAlbumDto,
@@ -10,7 +17,6 @@ import type {
 	LastFmTopAlbumsResponse,
 	LastFmTrackDto,
 	LastFmTrackInfoResponse,
-	PaginatedResponse,
 } from "./types";
 
 const API_BASE_URL = env.VITE_BASE_URL;

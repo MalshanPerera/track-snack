@@ -142,4 +142,3 @@ export function AlbumChart({ albums, onAlbumClick }: AlbumChartProps) {
 		</Box>
 	);
 }
-

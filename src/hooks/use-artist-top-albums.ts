@@ -21,4 +21,3 @@ export function useArtistTopAlbums(
 		staleTime: 5 * 60 * 1000,
 	});
 }
-

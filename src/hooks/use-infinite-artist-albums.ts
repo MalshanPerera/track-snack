@@ -3,8 +3,7 @@ import { useCallback } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getArtistAlbums } from "@/api/lastfm";
-import type { PaginatedResponse } from "@/api/types";
-import type { Album } from "@/types";
+import type { Album, PaginatedResponse } from "@/types";
 
 const ITEMS_PER_PAGE = 30;
 

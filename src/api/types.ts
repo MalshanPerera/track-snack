@@ -1,14 +1,3 @@
-// Last.fm API response types
-
-export interface PaginatedResponse<T> {
-	data: T[];
-	page: number;
-	perPage: number;
-	totalPages: number;
-	total: number;
-	hasNextPage: boolean;
-}
-
 export interface LastFmSearchAttr {
 	"opensearch:Query": {
 		"#text": string;
