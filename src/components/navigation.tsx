@@ -25,7 +25,7 @@ export function Navigation() {
 		>
 			<Container maxW="container.xl">
 				<HStack justify="space-between" py={4} gap={6}>
-					<Link to="/" search={{ q: "" }}>
+					<Link to="/">
 						<HStack gap={2} align="center">
 							<Music size={24} />
 							<Text fontWeight="bold" fontSize="lg">
