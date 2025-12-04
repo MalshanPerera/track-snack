@@ -1,4 +1,5 @@
-import type { AlbumImage, TrackArtist } from "./index";
+import type { AlbumImage } from "./album";
+import type { TrackArtist } from "./track";
 
 export interface FavoriteTrack {
 	name: string;

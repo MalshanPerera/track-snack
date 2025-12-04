@@ -1,13 +1,22 @@
 import { env } from "@/env";
-import type { Album, AlbumImage, ImageSize, Track, TrackArtist } from "@/types";
+import type {
+	Album,
+	AlbumImage,
+	ImageSize,
+	PaginatedResponse,
+	Track,
+	TrackArtist,
+} from "@/types";
 
 import type {
 	LastFmAlbumDto,
+	LastFmArtistTopTracksResponse,
+	LastFmChartTopTracksResponse,
 	LastFmImageDto,
 	LastFmResponse,
 	LastFmTopAlbumsResponse,
 	LastFmTrackDto,
-	PaginatedResponse,
+	LastFmTrackInfoResponse,
 } from "./types";
 
 const API_BASE_URL = env.VITE_BASE_URL;
@@ -255,5 +264,116 @@ export async function getArtistAlbums(
 		totalPages,
 		total,
 		hasNextPage: page < totalPages,
+	};
+}
+
+export async function getChartTopTracks(
+	limit = 50,
+	page = 1,
+): Promise<PaginatedResponse<Track>> {
+	const data = await request<LastFmChartTopTracksResponse>({
+		method: "chart.gettoptracks",
+		limit,
+		page,
+	});
+
+	const tracks = data.tracks?.track || [];
+	const attr = data.tracks?.["@attr"];
+	const totalPages = attr ? parseInt(attr.totalPages, 10) : 1;
+	const total = attr ? parseInt(attr.total, 10) : tracks.length;
+
+	return {
+		data: tracks.map(mapTrack),
+		page,
+		perPage: limit,
+		totalPages,
+		total,
+		hasNextPage: page < totalPages,
+	};
+}
+
+export interface TrackWithAlbum extends Track {
+	albumName?: string;
+	albumArtist?: string;
+}
+
+export async function getArtistTopTracks(
+	artist: string,
+	limit = 30,
+	page = 1,
+): Promise<PaginatedResponse<TrackWithAlbum>> {
+	if (!artist.trim()) {
+		return {
+			data: [],
+			page: 1,
+			perPage: limit,
+			totalPages: 0,
+			total: 0,
+			hasNextPage: false,
+		};
+	}
+
+	const data = await request<LastFmArtistTopTracksResponse>({
+		method: "artist.gettoptracks",
+		artist,
+		limit,
+		page,
+	});
+
+	const tracks = data.toptracks?.track || [];
+	const attr = data.toptracks?.["@attr"];
+	const totalPages = attr ? parseInt(attr.totalPages, 10) : 1;
+	const total = attr ? parseInt(attr.total, 10) : tracks.length;
+
+	return {
+		data: tracks.map((dto) => ({
+			name: dto.name,
+			artist: {
+				name: dto.artist.name,
+				mbid: dto.artist.mbid,
+				url: dto.artist.url,
+			},
+			playcount: parseInt(dto.playcount, 10),
+			listeners: parseInt(dto.listeners, 10),
+			url: dto.url,
+			images: mapImages(dto.image),
+			rank: parseInt(dto["@attr"].rank, 10),
+		})),
+		page,
+		perPage: limit,
+		totalPages,
+		total,
+		hasNextPage: page < totalPages,
+	};
+}
+
+export interface TrackInfo {
+	name: string;
+	artist: string;
+	albumName?: string;
+	albumArtist?: string;
+	playcount: number;
+	listeners: number;
+}
+
+export async function getTrackInfo(
+	artist: string,
+	track: string,
+): Promise<TrackInfo> {
+	const data = await request<LastFmTrackInfoResponse>({
+		method: "track.getInfo",
+		artist,
+		track,
+	});
+
+	const trackData = data.track;
+
+	return {
+		name: trackData.name,
+		artist: trackData.artist.name,
+		albumName: trackData.album?.title,
+		albumArtist: trackData.album?.artist,
+		playcount: parseInt(trackData.playcount, 10),
+		listeners: parseInt(trackData.listeners, 10),
 	};
 }

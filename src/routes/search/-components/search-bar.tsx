@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 
 import { Box, Button, HStack, Input } from "@chakra-ui/react";
 import { Search, X } from "lucide-react";
@@ -17,6 +17,11 @@ export function SearchBar({
 	showClearButton = true,
 }: SearchBarProps) {
 	const [query, setQuery] = useState(defaultValue);
+
+	// Sync internal state when defaultValue prop changes
+	useEffect(() => {
+		setQuery(defaultValue);
+	}, [defaultValue]);
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();

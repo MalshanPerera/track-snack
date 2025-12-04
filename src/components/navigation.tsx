@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { Box, Button, Container, HStack, Text } from "@chakra-ui/react";
-import { Heart, Home, Music } from "lucide-react";
+import { BarChart3, Heart, Home, Music } from "lucide-react";
 
 export function Navigation() {
 	const router = useRouterState();
@@ -9,6 +9,7 @@ export function Navigation() {
 
 	const navItems = [
 		{ to: "/", label: "Home", icon: Home },
+		{ to: "/best-played", label: "Best Played", icon: BarChart3 },
 		{ to: "/favorites", label: "Favorites", icon: Heart },
 	];
 
