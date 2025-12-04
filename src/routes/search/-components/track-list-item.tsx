@@ -1,7 +1,7 @@
 import { Box, HStack, Image, Text, VStack } from "@chakra-ui/react";
 
-import type { Track } from "@/domain/entities/album";
 import { formatDuration, getAlbumImage } from "@/lib/utils";
+import type { Track } from "@/types";
 
 interface TrackListItemProps {
 	track: Track;

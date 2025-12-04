@@ -4,8 +4,13 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Container, Heading, VStack } from "@chakra-ui/react";
 
-import type { Album, Track } from "@/domain/entities/album";
-import { useAlbumSearch, useTrackSearch } from "@/presentation/hooks";
+import {
+	useInfiniteAlbumSearch,
+	useInfiniteTrackSearch,
+	useSortedAlbums,
+} from "@/hooks";
+import type { Album, SortOption, Track } from "@/types";
+import { SortOptions } from "@/types";
 
 import { SearchBar } from "./-components/search-bar";
 import { SearchResults } from "./-components/search-results";
@@ -21,15 +26,29 @@ function SearchPage() {
 	const { q } = Route.useSearch();
 	const navigate = useNavigate();
 	const [searchQuery, setSearchQuery] = useState(q);
+	const [sortOption, setSortOption] = useState<SortOption>(
+		SortOptions.NAME_ASC,
+	);
 
-	const { data: albums = [], isLoading: albumsLoading } = useAlbumSearch(
-		searchQuery,
-		searchQuery.length > 0,
-	);
-	const { data: tracks = [], isLoading: tracksLoading } = useTrackSearch(
-		searchQuery,
-		searchQuery.length > 0,
-	);
+	const {
+		albums: rawAlbums,
+		isLoading: albumsLoading,
+		hasNextPage: hasNextAlbumsPage,
+		isFetchingNextPage: isFetchingNextAlbumsPage,
+		fetchNextPage: fetchNextAlbumsPage,
+		prefetchNextPage: prefetchNextAlbumsPage,
+	} = useInfiniteAlbumSearch(searchQuery, searchQuery.length > 0);
+
+	const albums = useSortedAlbums(rawAlbums, sortOption);
+
+	const {
+		tracks,
+		isLoading: tracksLoading,
+		hasNextPage: hasNextTracksPage,
+		isFetchingNextPage: isFetchingNextTracksPage,
+		fetchNextPage: fetchNextTracksPage,
+		prefetchNextPage: prefetchNextTracksPage,
+	} = useInfiniteTrackSearch(searchQuery, searchQuery.length > 0);
 
 	useEffect(() => {
 		setSearchQuery(q);
@@ -54,10 +73,9 @@ function SearchPage() {
 	};
 
 	const handleTrackClick = (track: Track) => {
-		const artistName = track.artist.name;
 		navigate({
 			to: "/albums/$artist",
-			params: { artist: encodeURIComponent(artistName) },
+			params: { artist: encodeURIComponent(track.artist.name) },
 		});
 	};
 
@@ -76,6 +94,16 @@ function SearchPage() {
 					isLoading={albumsLoading || tracksLoading}
 					onAlbumClick={handleAlbumClick}
 					onTrackClick={handleTrackClick}
+					sortOption={sortOption}
+					onSortChange={setSortOption}
+					hasNextAlbumsPage={hasNextAlbumsPage}
+					isFetchingNextAlbumsPage={isFetchingNextAlbumsPage}
+					fetchNextAlbumsPage={fetchNextAlbumsPage}
+					prefetchNextAlbumsPage={prefetchNextAlbumsPage}
+					hasNextTracksPage={hasNextTracksPage}
+					isFetchingNextTracksPage={isFetchingNextTracksPage}
+					fetchNextTracksPage={fetchNextTracksPage}
+					prefetchNextTracksPage={prefetchNextTracksPage}
 				/>
 			</VStack>
 		</Container>

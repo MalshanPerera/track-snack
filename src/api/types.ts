@@ -1,7 +1,25 @@
-/**
- * Last.fm API Response Types
- * These are infrastructure-specific DTOs that match the Last.fm API format
- */
+// Last.fm API response types
+
+export interface PaginatedResponse<T> {
+	data: T[];
+	page: number;
+	perPage: number;
+	totalPages: number;
+	total: number;
+	hasNextPage: boolean;
+}
+
+export interface LastFmSearchAttr {
+	"opensearch:Query": {
+		"#text": string;
+		role: string;
+		searchTerms: string;
+		startPage: string;
+	};
+	"opensearch:totalResults": string;
+	"opensearch:startIndex": string;
+	"opensearch:itemsPerPage": string;
+}
 
 export interface LastFmResponse<T> {
 	results?: {
@@ -13,16 +31,13 @@ export interface LastFmResponse<T> {
 		};
 		album?: T;
 		track?: T[];
-	};
+		"@attr"?: LastFmSearchAttr;
+	} & Partial<LastFmSearchAttr>;
 	album?: T;
 	error?: number;
 	message?: string;
 }
 
-/**
- * Last.fm API Album DTO
- * Raw format from the API with "#text" and other API-specific structures
- */
 export interface LastFmAlbumDto {
 	name: string;
 	artist: string;
@@ -41,9 +56,6 @@ export interface LastFmAlbumDto {
 	};
 }
 
-/**
- * Last.fm API Track DTO
- */
 export interface LastFmTrackDto {
 	name: string;
 	artist:
@@ -67,10 +79,35 @@ export interface LastFmTrackDto {
 	};
 }
 
-/**
- * Last.fm API Image DTO
- */
 export interface LastFmImageDto {
 	"#text": string;
 	size: "small" | "medium" | "large" | "extralarge" | "mega" | "";
+}
+
+export interface LastFmTopAlbumsResponse {
+	topalbums: {
+		album: LastFmTopAlbumDto[];
+		"@attr": {
+			artist: string;
+			page: string;
+			perPage: string;
+			totalPages: string;
+			total: string;
+		};
+	};
+	error?: number;
+	message?: string;
+}
+
+export interface LastFmTopAlbumDto {
+	name: string;
+	playcount: number;
+	mbid?: string;
+	url: string;
+	artist: {
+		name: string;
+		mbid?: string;
+		url: string;
+	};
+	image: LastFmImageDto[];
 }

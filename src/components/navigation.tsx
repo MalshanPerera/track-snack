@@ -1,16 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { Box, Button, Container, HStack, Text } from "@chakra-ui/react";
-import { Home, Music, Search } from "lucide-react";
+import { Home, Music } from "lucide-react";
 
 export function Navigation() {
 	const router = useRouterState();
 	const currentPath = router.location.pathname;
 
-	const navItems = [
-		{ to: "/", label: "Home", icon: Home },
-		{ to: "/search", label: "Search", icon: Search },
-	];
+	const navItems = [{ to: "/", label: "Home", icon: Home }];
 
 	return (
 		<Box

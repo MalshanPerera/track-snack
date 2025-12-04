@@ -1,11 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useDI } from "@/di";
-
-/**
- * Presentation Hook: Track Search
- * React Query hook for searching tracks
- */
+import { searchTracks } from "@/api/lastfm";
 
 export const trackSearchKeys = {
 	all: ["tracks", "search"] as const,
@@ -14,11 +9,12 @@ export const trackSearchKeys = {
 };
 
 export function useTrackSearch(query: string, enabled = true) {
-	const { searchTracksUseCase } = useDI();
-
 	return useQuery({
 		queryKey: trackSearchKeys.query(query),
-		queryFn: () => searchTracksUseCase.execute(query),
+		queryFn: async () => {
+			const result = await searchTracks(query);
+			return result.data;
+		},
 		enabled: enabled && query.length > 0,
 		staleTime: 5 * 60 * 1000, // 5 minutes
 	});

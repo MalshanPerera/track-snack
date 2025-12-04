@@ -1,5 +1,3 @@
-import { type FormEvent, useState } from "react";
-
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import {
@@ -8,11 +6,12 @@ import {
 	Container,
 	Heading,
 	HStack,
-	Input,
 	Text,
 	VStack,
 } from "@chakra-ui/react";
-import { Music, Search } from "lucide-react";
+import { Music } from "lucide-react";
+
+import { SearchBar } from "./search/-components/search-bar";
 
 export const Route = createFileRoute("/")({
 	component: HomePage,
@@ -20,21 +19,20 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
 	const navigate = useNavigate();
-	const [artistQuery, setArtistQuery] = useState("");
 
-	const handleSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		if (artistQuery.trim()) {
+	const handleSearch = (query: string) => {
+		if (query.trim()) {
 			navigate({
-				to: "/albums/$artist",
-				params: { artist: encodeURIComponent(artistQuery.trim()) },
+				to: "/search",
+				search: { q: query.trim() },
 			});
 		}
 	};
 
 	return (
-		<Container maxW="container.lg" py={16}>
+		<Container maxW="container.xl" py={16}>
 			<VStack gap={8} alignItems="center" textAlign="center">
+				{/* Hero Section */}
 				<VStack gap={4}>
 					<Box
 						css={{
@@ -64,63 +62,20 @@ function HomePage() {
 					</Heading>
 					<Text fontSize="xl" color="fg.muted" maxW="600px">
 						Discover albums and songs from your favorite artists. Search for an
-						artist to explore their discography.
+						artist, album, or track to explore.
 					</Text>
 				</VStack>
 
-				<Box as="form" onSubmit={handleSubmit} width="100%" maxW="600px">
-					<Box position="relative">
-						<Box
-							position="absolute"
-							left={3}
-							top="50%"
-							transform="translateY(-50%)"
-							zIndex={1}
-							pointerEvents="none"
-							css={{
-								color: "fg.muted",
-							}}
-						>
-							<Search size={20} />
-						</Box>
-						<Input
-							value={artistQuery}
-							onChange={(e) => setArtistQuery(e.target.value)}
-							placeholder="Search for an artist (e.g., The Beatles, Taylor Swift, Radiohead)"
-							bg="bg.subtle"
-							borderColor="border.emphasized"
-							pl={10}
-							size="lg"
-							css={{
-								_focus: {
-									borderColor: "primary.500",
-									boxShadow: "0 0 0 1px var(--chakra-colors-primary-500)",
-								},
-							}}
-						/>
-					</Box>
-					<HStack gap={2} mt={4}>
-						<Button
-							type="submit"
-							size="lg"
-							colorPalette="primary"
-							flex={1}
-							disabled={!artistQuery.trim()}
-						>
-							Search Albums
-						</Button>
-						<Button
-							type="button"
-							size="lg"
-							variant="outline"
-							onClick={() => navigate({ to: "/search", search: { q: "" } })}
-						>
-							Advanced Search
-						</Button>
-					</HStack>
+				{/* Search Bar */}
+				<Box width="100%" maxW="700px">
+					<SearchBar
+						onSearch={handleSearch}
+						placeholder="Search for artists, albums, or tracks..."
+					/>
 				</Box>
 
-				<HStack gap={4} mt={8} flexWrap="wrap" justify="center">
+				{/* Quick Search Suggestions */}
+				<HStack gap={4} flexWrap="wrap" justify="center">
 					<Text fontSize="sm" color="fg.muted">
 						Try searching for:
 					</Text>
@@ -130,13 +85,7 @@ function HomePage() {
 								key={artist}
 								variant="ghost"
 								size="sm"
-								onClick={() => {
-									setArtistQuery(artist);
-									navigate({
-										to: "/albums/$artist",
-										params: { artist: encodeURIComponent(artist) },
-									});
-								}}
+								onClick={() => handleSearch(artist)}
 							>
 								{artist}
 							</Button>

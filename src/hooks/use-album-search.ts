@@ -1,11 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useDI } from "@/di";
-
-/**
- * Presentation Hook: Album Search
- * React Query hook for searching albums
- */
+import { searchAlbums } from "@/api/lastfm";
 
 export const albumSearchKeys = {
 	all: ["albums", "search"] as const,
@@ -14,11 +9,12 @@ export const albumSearchKeys = {
 };
 
 export function useAlbumSearch(query: string, enabled = true) {
-	const { searchAlbumsUseCase } = useDI();
-
 	return useQuery({
 		queryKey: albumSearchKeys.query(query),
-		queryFn: () => searchAlbumsUseCase.execute(query),
+		queryFn: async () => {
+			const result = await searchAlbums(query);
+			return result.data;
+		},
 		enabled: enabled && query.length > 0,
 		staleTime: 5 * 60 * 1000, // 5 minutes
 	});
