@@ -111,3 +111,78 @@ export interface LastFmTopAlbumDto {
 	};
 	image: LastFmImageDto[];
 }
+
+export interface LastFmChartTopTracksResponse {
+	tracks: {
+		track: LastFmTrackDto[];
+		"@attr": {
+			page: string;
+			perPage: string;
+			totalPages: string;
+			total: string;
+		};
+	};
+	error?: number;
+	message?: string;
+}
+
+export interface LastFmArtistTopTracksDto {
+	name: string;
+	playcount: string;
+	listeners: string;
+	mbid?: string;
+	url: string;
+	streamable: string;
+	artist: {
+		name: string;
+		mbid?: string;
+		url: string;
+	};
+	image: LastFmImageDto[];
+	"@attr": {
+		rank: string;
+	};
+}
+
+export interface LastFmArtistTopTracksResponse {
+	toptracks: {
+		track: LastFmArtistTopTracksDto[];
+		"@attr": {
+			artist: string;
+			page: string;
+			perPage: string;
+			totalPages: string;
+			total: string;
+		};
+	};
+	error?: number;
+	message?: string;
+}
+
+export interface LastFmTrackInfoResponse {
+	track: {
+		name: string;
+		mbid?: string;
+		url: string;
+		duration: string;
+		listeners: string;
+		playcount: string;
+		artist: {
+			name: string;
+			mbid?: string;
+			url: string;
+		};
+		album?: {
+			artist: string;
+			title: string;
+			mbid?: string;
+			url: string;
+			image: LastFmImageDto[];
+		};
+		toptags?: {
+			tag: { name: string; url: string }[];
+		};
+	};
+	error?: number;
+	message?: string;
+}
