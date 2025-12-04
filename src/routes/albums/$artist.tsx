@@ -12,13 +12,14 @@ import {
 	Text,
 	VStack,
 } from "@chakra-ui/react";
+import { Disc3 } from "lucide-react";
 
 import type { Album } from "@/domain/entities/album";
 import {
 	type SortOption,
 	SortOptions,
 } from "@/domain/value-objects/sort-option";
-import { useAlbumSearch, useSortedAlbums } from "@/presentation/hooks";
+import { useArtistAlbums, useSortedAlbums } from "@/presentation/hooks";
 
 import { AlbumGrid } from "./-components/album-grid";
 import { AlbumSort } from "./-components/album-sort";
@@ -33,7 +34,11 @@ function ArtistAlbumsPage() {
 	const [sortBy, setSortBy] = useState<SortOption>(SortOptions.NAME_ASC);
 	const decodedArtist = decodeURIComponent(artist);
 
-	const { data: albums = [], isLoading, error } = useAlbumSearch(decodedArtist);
+	const {
+		data: albums = [],
+		isLoading,
+		error,
+	} = useArtistAlbums(decodedArtist);
 	const sortedAlbums = useSortedAlbums(albums, sortBy);
 
 	const handleAlbumClick = (album: Album) => {
@@ -47,31 +52,85 @@ function ArtistAlbumsPage() {
 	};
 
 	return (
-		<Container maxW="container.xl" py={8}>
-			<VStack gap={6} align="stretch">
-				<HStack justify="space-between" flexWrap="wrap" gap={4}>
-					<Heading size="2xl">Albums by {decodedArtist}</Heading>
-					{!isLoading && albums.length > 0 && (
-						<AlbumSort value={sortBy} onChange={setSortBy} />
-					)}
-				</HStack>
+		<Box minH="100vh" bg="bg.canvas">
+			{/* Hero Header Section */}
+			<Box borderColor="border.muted" py={{ base: 8, md: 12 }} mb={8}>
+				<Container maxW="container.xl">
+					<VStack gap={4} align="start">
+						<HStack gap={4} align="center">
+							<Box
+								bg="primary.500"
+								p={3}
+								borderRadius="xl"
+								css={{
+									boxShadow:
+										"0 8px 24px rgba(var(--chakra-colors-primary-500), 0.3)",
+								}}
+							>
+								<Disc3 size={32} color="white" />
+							</Box>
+							<VStack align="start" gap={0}>
+								<Text
+									fontSize="sm"
+									fontWeight="semibold"
+									color="primary.400"
+									textTransform="uppercase"
+									letterSpacing="wider"
+								>
+									Discography
+								</Text>
+								<Heading size={{ base: "2xl", md: "3xl" }} fontWeight="black">
+									{decodedArtist}
+								</Heading>
+							</VStack>
+						</HStack>
 
+						{!isLoading && albums.length > 0 && (
+							<HStack
+								justify="space-between"
+								w="full"
+								flexWrap="wrap"
+								gap={4}
+								pt={4}
+							>
+								<Text fontSize="md" color="fg.muted" fontWeight="medium">
+									{albums.length} album{albums.length !== 1 ? "s" : ""} found
+								</Text>
+								<AlbumSort value={sortBy} onChange={setSortBy} />
+							</HStack>
+						)}
+					</VStack>
+				</Container>
+			</Box>
+
+			<Container maxW="container.xl" pb={12}>
 				{isLoading && (
 					<Box
 						display="flex"
+						flexDirection="column"
 						justifyContent="center"
 						alignItems="center"
-						py={12}
+						py={20}
+						gap={4}
 					>
-						<Spinner size="xl" colorPalette="primary" />
+						<Spinner
+							size="xl"
+							color="primary.500"
+							css={{
+								"--spinner-track-color": "var(--chakra-colors-bg-muted)",
+							}}
+						/>
+						<Text color="fg.muted" fontSize="md" fontWeight="medium">
+							Loading albums...
+						</Text>
 					</Box>
 				)}
 
 				{error && (
-					<Alert.Root status="error">
+					<Alert.Root status="error" borderRadius="xl">
 						<Alert.Indicator />
 						<Alert.Content>
-							<Alert.Title>Error loading albums</Alert.Title>
+							<Alert.Title fontWeight="bold">Error loading albums</Alert.Title>
 							<Alert.Description>
 								{error instanceof Error
 									? error.message
@@ -81,23 +140,10 @@ function ArtistAlbumsPage() {
 					</Alert.Root>
 				)}
 
-				{!isLoading && !error && albums.length === 0 && (
-					<Box py={12} textAlign="center">
-						<Text color="fg.muted" fontSize="lg">
-							No albums found for "{decodedArtist}"
-						</Text>
-					</Box>
+				{!isLoading && !error && (
+					<AlbumGrid albums={sortedAlbums} onAlbumClick={handleAlbumClick} />
 				)}
-
-				{!isLoading && !error && albums.length > 0 && (
-					<>
-						<Text fontSize="sm" color="fg.muted">
-							Found {albums.length} album{albums.length !== 1 ? "s" : ""}
-						</Text>
-						<AlbumGrid albums={sortedAlbums} onAlbumClick={handleAlbumClick} />
-					</>
-				)}
-			</VStack>
-		</Container>
+			</Container>
+		</Box>
 	);
 }

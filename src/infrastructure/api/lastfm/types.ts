@@ -74,3 +74,39 @@ export interface LastFmImageDto {
 	"#text": string;
 	size: "small" | "medium" | "large" | "extralarge" | "mega" | "";
 }
+
+/**
+ * Last.fm API Top Albums Response
+ * Response format for artist.gettopalbums endpoint
+ */
+export interface LastFmTopAlbumsResponse {
+	topalbums: {
+		album: LastFmTopAlbumDto[];
+		"@attr": {
+			artist: string;
+			page: string;
+			perPage: string;
+			totalPages: string;
+			total: string;
+		};
+	};
+	error?: number;
+	message?: string;
+}
+
+/**
+ * Last.fm API Top Album DTO
+ * Format returned by artist.gettopalbums endpoint
+ */
+export interface LastFmTopAlbumDto {
+	name: string;
+	playcount: number;
+	mbid?: string;
+	url: string;
+	artist: {
+		name: string;
+		mbid?: string;
+		url: string;
+	};
+	image: LastFmImageDto[];
+}

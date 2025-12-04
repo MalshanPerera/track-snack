@@ -3,7 +3,12 @@ import type { AlbumRepository } from "@/domain/repositories/album-repository";
 import { env } from "@/env";
 
 import { mapLastFmAlbumToDomain, mapLastFmTrackToDomain } from "./mappers";
-import type { LastFmAlbumDto, LastFmResponse, LastFmTrackDto } from "./types";
+import type {
+	LastFmAlbumDto,
+	LastFmResponse,
+	LastFmTopAlbumsResponse,
+	LastFmTrackDto,
+} from "./types";
 
 const API_BASE_URL = env.VITE_BASE_URL;
 const API_KEY = env.VITE_LAST_FM_API_KEY;
@@ -88,6 +93,36 @@ export class LastFmClient implements AlbumRepository {
 	}
 
 	async getArtistAlbums(artist: string, limit = 50): Promise<Album[]> {
-		return this.searchAlbums(artist, limit);
+		return this.getTopAlbumsByArtist(artist, limit);
+	}
+
+	async getTopAlbumsByArtist(artist: string, limit = 50): Promise<Album[]> {
+		const data = await this.request<LastFmTopAlbumsResponse>({
+			method: "artist.gettopalbums",
+			artist,
+			limit,
+		});
+
+		const albums = data.topalbums?.album || [];
+
+		// Map LastFmTopAlbumDto to Album domain entity
+		return albums.map((dto) => ({
+			name: dto.name,
+			artist: dto.artist.name,
+			mbid: dto.mbid,
+			url: dto.url,
+			images: dto.image
+				.filter((img) => img["#text"] && img.size)
+				.map((img) => ({
+					url: img["#text"],
+					size: (img.size || "medium") as
+						| "small"
+						| "medium"
+						| "large"
+						| "extralarge"
+						| "mega",
+				})),
+			playcount: dto.playcount,
+		}));
 	}
 }
