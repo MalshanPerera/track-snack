@@ -2,6 +2,7 @@
 
 A modern React application that showcases albums and songs using the Last.fm API. Discover artists, explore their discographies, search for music, and manage your favorite tracks—all in one beautiful interface.
 
+**Demo:** [https://track-snack.vercel.app/](https://track-snack.vercel.app/)
 **API:** [Last.fm API](https://www.last.fm/api)
 
 ## ✨ Features
