@@ -1,17 +1,31 @@
+import { useState } from "react";
+
 import { Link, useRouterState } from "@tanstack/react-router";
 
-import { Box, Button, Container, HStack, Text } from "@chakra-ui/react";
-import { BarChart3, Heart, Home, Music } from "lucide-react";
+import {
+	Box,
+	Button,
+	Container,
+	HStack,
+	IconButton,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
+import { BarChart3, Heart, Home, Menu, Music, X } from "lucide-react";
+
+const navItems = [
+	{ to: "/", label: "Home", icon: Home },
+	{ to: "/best-played", label: "Best Played", icon: BarChart3 },
+	{ to: "/favorites", label: "Favorites", icon: Heart },
+] as const;
 
 export function Navigation() {
 	const router = useRouterState();
 	const currentPath = router.location.pathname;
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-	const navItems = [
-		{ to: "/", label: "Home", icon: Home },
-		{ to: "/best-played", label: "Best Played", icon: BarChart3 },
-		{ to: "/favorites", label: "Favorites", icon: Heart },
-	];
+	const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+	const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
 	return (
 		<Box
@@ -29,15 +43,27 @@ export function Navigation() {
 		>
 			<Container maxW="container.xl">
 				<HStack justify="space-between" py={4} gap={6}>
-					<Link to="/">
+					{/* Logo */}
+					<Link to="/" onClick={closeMobileMenu}>
 						<HStack gap={2} align="center">
-							<Music size={24} />
+							<Box
+								p={1.5}
+								borderRadius="lg"
+								bg="primary.500"
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<Music size={20} color="white" />
+							</Box>
 							<Text fontWeight="bold" fontSize="lg">
 								Track Snack
 							</Text>
 						</HStack>
 					</Link>
-					<HStack gap={2}>
+
+					{/* Desktop Navigation */}
+					<HStack gap={2} display={{ base: "none", md: "flex" }}>
 						{navItems.map((item) => {
 							const Icon = item.icon;
 							const isActive =
@@ -60,8 +86,78 @@ export function Navigation() {
 							);
 						})}
 					</HStack>
+
+					{/* Mobile Menu Button */}
+					<IconButton
+						aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+						display={{ base: "flex", md: "none" }}
+						variant="ghost"
+						size="md"
+						onClick={toggleMobileMenu}
+					>
+						{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+					</IconButton>
 				</HStack>
 			</Container>
+
+			{/* Mobile Menu Dropdown */}
+			<Box
+				display={{ base: "block", md: "none" }}
+				overflow="hidden"
+				css={{
+					maxHeight: isMobileMenuOpen ? "400px" : "0",
+					opacity: isMobileMenuOpen ? 1 : 0,
+					transition: "all 0.3s ease-in-out",
+				}}
+			>
+				<Container maxW="container.xl" pb={4}>
+					<VStack gap={2} align="stretch">
+						{navItems.map((item) => {
+							const Icon = item.icon;
+							const isActive =
+								item.to === "/"
+									? currentPath === "/"
+									: currentPath.includes(item.to);
+							return (
+								<Link key={item.to} to={item.to} onClick={closeMobileMenu}>
+									<Button
+										variant={isActive ? "solid" : "ghost"}
+										colorPalette={isActive ? "primary" : "gray"}
+										size="lg"
+										width="100%"
+										justifyContent="flex-start"
+									>
+										<HStack gap={3}>
+											<Icon size={20} />
+											<Text fontSize="md">{item.label}</Text>
+										</HStack>
+									</Button>
+								</Link>
+							);
+						})}
+					</VStack>
+				</Container>
+			</Box>
+
+			{/* Mobile Menu Overlay */}
+			{isMobileMenuOpen && (
+				<Box
+					position="fixed"
+					inset={0}
+					top="73px"
+					bg="blackAlpha.500"
+					zIndex={-1}
+					onClick={closeMobileMenu}
+					display={{ base: "block", md: "none" }}
+					css={{
+						animation: "fadeIn 0.2s ease-out",
+						"@keyframes fadeIn": {
+							from: { opacity: 0 },
+							to: { opacity: 1 },
+						},
+					}}
+				/>
+			)}
 		</Box>
 	);
 }
