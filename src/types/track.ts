@@ -1,8 +1,5 @@
 import type { AlbumImage } from "./album";
 
-/**
- * Track domain model
- */
 export interface Track {
 	name: string;
 	artist: TrackArtist;
@@ -15,9 +12,6 @@ export interface Track {
 	rank?: number;
 }
 
-/**
- * Track artist information
- */
 export interface TrackArtist {
 	name: string;
 	mbid?: string;
