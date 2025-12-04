@@ -27,6 +27,7 @@ import { useAlbumInfo } from "@/hooks";
 import { formatPlayCount, getAlbumImage } from "@/lib/utils";
 
 import { TrackList } from "./-components/track-list";
+import styles from "./album-detail.module.css";
 
 type AlbumSearchParams = {
 	from?: "best-played";
@@ -150,26 +151,11 @@ function AlbumDetailPage() {
 			<Box position="relative" overflow="hidden">
 				{/* Blurred Background Image */}
 				<Box
-					position="absolute"
-					inset={0}
+					className={styles.blurredBg}
+					style={{ "--bg-image": `url(${imageUrl})` } as React.CSSProperties}
 					css={{
 						"&::before": {
-							content: '""',
-							position: "absolute",
-							inset: 0,
 							backgroundImage: `url(${imageUrl})`,
-							backgroundSize: "cover",
-							backgroundPosition: "center",
-							filter: "blur(60px) saturate(1.5)",
-							transform: "scale(1.2)",
-							opacity: 0.4,
-						},
-						"&::after": {
-							content: '""',
-							position: "absolute",
-							inset: 0,
-							background:
-								"linear-gradient(to bottom, transparent 0%, var(--chakra-colors-bg-canvas) 100%)",
 						},
 					}}
 				/>
@@ -180,16 +166,11 @@ function AlbumDetailPage() {
 					{isFromBestPlayed ? (
 						<Link to="/best-played">
 							<Button
+								className={styles.backButton}
 								variant="ghost"
 								size="sm"
 								mb={6}
-								css={{
-									color: "fg.muted",
-									_hover: {
-										color: "fg.default",
-										bg: "bg.muted",
-									},
-								}}
+								color="fg.muted"
 							>
 								<ArrowLeft size={16} />
 								Back to Best Played
@@ -198,16 +179,11 @@ function AlbumDetailPage() {
 					) : (
 						<Link to="/albums/$artist" params={{ artist }}>
 							<Button
+								className={styles.backButton}
 								variant="ghost"
 								size="sm"
 								mb={6}
-								css={{
-									color: "fg.muted",
-									_hover: {
-										color: "fg.default",
-										bg: "bg.muted",
-									},
-								}}
+								color="fg.muted"
 							>
 								<ArrowLeft size={16} />
 								Back to {decodedArtist}
@@ -221,39 +197,11 @@ function AlbumDetailPage() {
 						flexDirection={{ base: "column", md: "row" }}
 					>
 						{/* Album Cover */}
-						<Box
-							flexShrink={0}
-							css={{
-								animation: "albumFadeIn 0.6s ease-out",
-								"@keyframes albumFadeIn": {
-									"0%": {
-										opacity: 0,
-										transform: "scale(0.9)",
-									},
-									"100%": {
-										opacity: 1,
-										transform: "scale(1)",
-									},
-								},
-							}}
-						>
+						<Box className={styles.albumCover} flexShrink={0}>
 							<Box
-								position="relative"
+								className={styles.albumCoverContainer}
 								width={{ base: "200px", sm: "250px", md: "300px" }}
 								aspectRatio="1"
-								borderRadius="xl"
-								overflow="hidden"
-								css={{
-									boxShadow:
-										"0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.1)",
-									transition: "transform 0.3s ease",
-									"&:hover": {
-										transform: "scale(1.02)",
-									},
-									"&:hover .play-overlay": {
-										opacity: 1,
-									},
-								}}
 							>
 								<Image
 									src={imageUrl}
@@ -263,28 +211,8 @@ function AlbumDetailPage() {
 									objectFit="cover"
 								/>
 								{/* Play Overlay */}
-								<Box
-									className="play-overlay"
-									position="absolute"
-									inset={0}
-									bg="blackAlpha.600"
-									display="flex"
-									alignItems="center"
-									justifyContent="center"
-									opacity={0}
-									css={{
-										transition: "opacity 0.3s ease",
-										cursor: "pointer",
-									}}
-								>
-									<Box
-										bg="primary.500"
-										borderRadius="full"
-										p={5}
-										css={{
-											boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-										}}
-									>
+								<Box className={styles.playOverlay} bg="blackAlpha.600">
+									<Box className={styles.playButton} bg="primary.500">
 										<Play size={36} fill="white" color="white" />
 									</Box>
 								</Box>
@@ -292,26 +220,7 @@ function AlbumDetailPage() {
 						</Box>
 
 						{/* Album Info */}
-						<VStack
-							align="start"
-							gap={4}
-							flex={1}
-							css={{
-								animation: "infoSlideIn 0.6s ease-out",
-								animationDelay: "0.1s",
-								animationFillMode: "backwards",
-								"@keyframes infoSlideIn": {
-									"0%": {
-										opacity: 0,
-										transform: "translateY(20px)",
-									},
-									"100%": {
-										opacity: 1,
-										transform: "translateY(0)",
-									},
-								},
-							}}
-						>
+						<VStack className={styles.albumInfo} align="start" gap={4} flex={1}>
 							{/* Album Type Badge */}
 							<Badge
 								colorPalette="primary"
@@ -340,15 +249,10 @@ function AlbumDetailPage() {
 							{/* Artist Name */}
 							<Link to="/albums/$artist" params={{ artist }}>
 								<Text
+									className={styles.artistLink}
 									fontSize={{ base: "lg", md: "xl" }}
 									fontWeight="semibold"
 									color="fg.muted"
-									css={{
-										transition: "color 0.2s ease",
-										"&:hover": {
-											color: "var(--chakra-colors-primary-500)",
-										},
-									}}
 								>
 									{albumData.artist}
 								</Text>
@@ -394,34 +298,23 @@ function AlbumDetailPage() {
 							{wikiSummary && (
 								<Box pt={2} maxW="600px">
 									<Text
+										className={
+											!isWikiExpanded ? styles.wikiTruncate : undefined
+										}
 										fontSize="sm"
 										color="fg.muted"
 										lineHeight="1.7"
-										css={
-											!isWikiExpanded
-												? {
-														display: "-webkit-box",
-														WebkitLineClamp: 3,
-														WebkitBoxOrient: "vertical",
-														overflow: "hidden",
-													}
-												: {}
-										}
 									>
 										{wikiSummary}
 									</Text>
 									{wikiSummary.length > 200 && (
 										<Button
+											className={styles.readMoreButton}
 											variant="ghost"
 											size="sm"
 											mt={2}
 											color="primary.500"
 											onClick={() => setIsWikiExpanded(!isWikiExpanded)}
-											css={{
-												_hover: {
-													bg: "primary.500/10",
-												},
-											}}
 										>
 											{isWikiExpanded ? "Show less" : "Read more"}
 										</Button>
@@ -436,26 +329,12 @@ function AlbumDetailPage() {
 			{/* Track List Section */}
 			<Container maxW="container.xl" py={8}>
 				<Box
+					className={styles.trackListContainer}
 					bg="bg.panel"
 					borderRadius="xl"
 					border="1px solid"
 					borderColor="border.muted"
 					overflow="hidden"
-					css={{
-						animation: "trackListFadeIn 0.6s ease-out",
-						animationDelay: "0.3s",
-						animationFillMode: "backwards",
-						"@keyframes trackListFadeIn": {
-							"0%": {
-								opacity: 0,
-								transform: "translateY(20px)",
-							},
-							"100%": {
-								opacity: 1,
-								transform: "translateY(0)",
-							},
-						},
-					}}
 				>
 					<TrackList
 						tracks={tracks}

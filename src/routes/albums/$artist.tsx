@@ -31,6 +31,7 @@ import { SortOptions } from "@/types";
 
 import { AlbumGrid } from "./-components/album-grid";
 import { AlbumSort } from "./-components/album-sort";
+import styles from "./artist.module.css";
 
 export const Route = createFileRoute("/albums/$artist")({
 	component: ArtistAlbumsPage,
@@ -90,13 +91,10 @@ function ArtistAlbumsPage() {
 					<VStack gap={4} align="start">
 						<HStack gap={4} align="center">
 							<Box
+								className={styles.heroIcon}
 								bg="primary.500"
 								p={3}
 								borderRadius="xl"
-								css={{
-									boxShadow:
-										"0 8px 24px rgba(var(--chakra-colors-primary-500), 0.3)",
-								}}
 							>
 								<Disc3 size={32} color="white" />
 							</Box>

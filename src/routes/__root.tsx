@@ -27,12 +27,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				title: "Track Snack",
 			},
 		],
-		links: [
-			{
-				rel: "stylesheet",
-				href: "/styles.css",
-			},
-		],
+		links: [],
 	}),
 	notFoundComponent: NotFound,
 	component: RootComponent,

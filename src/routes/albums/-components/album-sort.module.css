@@ -1,0 +1,31 @@
+.selectTrigger {
+  font-weight: var(--chakra-fontWeights-medium, 500);
+  font-size: var(--chakra-fontSizes-sm, 0.875rem);
+  transition: all 0.2s ease;
+}
+
+.selectTrigger:hover {
+  border-color: var(--chakra-colors-primary-400);
+}
+
+.selectTrigger:focus {
+  border-color: var(--chakra-colors-primary-500);
+  box-shadow: 0 0 0 2px rgba(var(--chakra-colors-primary-500), 0.2);
+  outline: none;
+}
+
+.selectContent {
+  overflow: hidden;
+  padding: var(--chakra-space-1, 0.25rem);
+}
+
+.selectItem {
+  padding: var(--chakra-space-2, 0.5rem) var(--chakra-space-3, 0.75rem);
+  font-size: var(--chakra-fontSizes-sm, 0.875rem);
+  font-weight: var(--chakra-fontWeights-medium, 500);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}

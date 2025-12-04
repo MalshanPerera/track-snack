@@ -18,6 +18,7 @@ import { useBestPlayedStore } from "@/stores/best-played-store";
 
 import { AlbumChart, type ChartAlbumData } from "./-components/album-chart";
 import { Pagination } from "./-components/pagination";
+import styles from "./best-played.module.css";
 
 export const Route = createFileRoute("/best-played/")({
 	component: BestPlayedPage,
@@ -97,13 +98,11 @@ function BestPlayedPage() {
 							// Empty state - prompt to search
 							<VStack gap={6} py={12}>
 								<Box
+									className={styles.emptyIcon}
 									w={20}
 									h={20}
 									borderRadius="full"
 									bg="primary.500/10"
-									display="flex"
-									alignItems="center"
-									justifyContent="center"
 								>
 									<Search
 										size={40}

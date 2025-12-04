@@ -12,6 +12,8 @@ import {
 import { formatPlayCount } from "@/lib/utils";
 import type { Track } from "@/types";
 
+import styles from "./chart.module.css";
+
 export interface ChartTrackData {
 	name: string;
 	artist: string;
@@ -110,11 +112,11 @@ export function PlayCountChart({
 							const data = payload[0].payload as ChartDataItem;
 							return (
 								<Box
+									className={styles.tooltipBox}
 									bg="bg.subtle"
 									border="1px solid"
 									borderRadius="md"
 									p={3}
-									boxShadow="lg"
 								>
 									<Text fontWeight="semibold" fontSize="sm" mb={1}>
 										{data.fullName}

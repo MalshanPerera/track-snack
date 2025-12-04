@@ -1,0 +1,48 @@
+.toggleButton {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.toggleButton:hover {
+  transform: scale(1.1);
+  border-color: var(--chakra-colors-primary-500);
+}
+
+.toggleButton:active {
+  transform: scale(0.95);
+}
+
+.iconWrapper {
+  position: absolute;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.sunIcon {
+  composes: iconWrapper;
+}
+
+.sunIconVisible {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.sunIconHidden {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.moonIcon {
+  composes: iconWrapper;
+}
+
+.moonIconVisible {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.moonIconHidden {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
