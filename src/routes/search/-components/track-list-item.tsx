@@ -1,7 +1,9 @@
 import { Box, HStack, Image, Text, VStack } from "@chakra-ui/react";
 
+import { FavoriteButton } from "@/components/favorites-button";
+
 import { formatDuration, getAlbumImage } from "@/lib/utils";
-import type { Track } from "@/types";
+import type { FavoriteTrack, Track } from "@/types";
 
 interface TrackListItemProps {
 	track: Track;
@@ -14,6 +16,17 @@ export function TrackListItem({ track, onClick }: TrackListItemProps) {
 	const imageUrl = track.images?.length
 		? getAlbumImage(track.images, "large")
 		: null;
+
+	const favoriteTrack: FavoriteTrack = {
+		name: track.name,
+		artist: track.artist,
+		duration: track.duration,
+		url: track.url,
+		albumName: "Unknown Album",
+		albumArtist: artistName,
+		images: track.images,
+		addedAt: 0,
+	};
 
 	return (
 		<Box
@@ -73,11 +86,14 @@ export function TrackListItem({ track, onClick }: TrackListItemProps) {
 						{artistName}
 					</Text>
 				</VStack>
-				{duration && (
-					<Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">
-						{duration}
-					</Text>
-				)}
+				<HStack gap={2} flexShrink={0}>
+					{duration && (
+						<Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">
+							{duration}
+						</Text>
+					)}
+					<FavoriteButton track={favoriteTrack} />
+				</HStack>
 			</HStack>
 		</Box>
 	);

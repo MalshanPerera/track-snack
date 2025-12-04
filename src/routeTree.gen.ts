@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchIndexRouteImport } from './routes/search/index'
+import { Route as FavoritesIndexRouteImport } from './routes/favorites/index'
 import { Route as AlbumsArtistRouteImport } from './routes/albums/$artist'
 import { Route as AlbumsArtistAlbumRouteImport } from './routes/albums/$artist/$album'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const SearchIndexRoute = SearchIndexRouteImport.update({
   id: '/search/',
   path: '/search/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesIndexRoute = FavoritesIndexRouteImport.update({
+  id: '/favorites/',
+  path: '/favorites/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlbumsArtistRoute = AlbumsArtistRouteImport.update({
@@ -38,12 +44,14 @@ const AlbumsArtistAlbumRoute = AlbumsArtistAlbumRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/albums/$artist': typeof AlbumsArtistRouteWithChildren
+  '/favorites': typeof FavoritesIndexRoute
   '/search': typeof SearchIndexRoute
   '/albums/$artist/$album': typeof AlbumsArtistAlbumRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/albums/$artist': typeof AlbumsArtistRouteWithChildren
+  '/favorites': typeof FavoritesIndexRoute
   '/search': typeof SearchIndexRoute
   '/albums/$artist/$album': typeof AlbumsArtistAlbumRoute
 }
@@ -51,18 +59,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/albums/$artist': typeof AlbumsArtistRouteWithChildren
+  '/favorites/': typeof FavoritesIndexRoute
   '/search/': typeof SearchIndexRoute
   '/albums/$artist/$album': typeof AlbumsArtistAlbumRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/albums/$artist' | '/search' | '/albums/$artist/$album'
+  fullPaths:
+    | '/'
+    | '/albums/$artist'
+    | '/favorites'
+    | '/search'
+    | '/albums/$artist/$album'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/albums/$artist' | '/search' | '/albums/$artist/$album'
+  to:
+    | '/'
+    | '/albums/$artist'
+    | '/favorites'
+    | '/search'
+    | '/albums/$artist/$album'
   id:
     | '__root__'
     | '/'
     | '/albums/$artist'
+    | '/favorites/'
     | '/search/'
     | '/albums/$artist/$album'
   fileRoutesById: FileRoutesById
@@ -70,6 +90,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlbumsArtistRoute: typeof AlbumsArtistRouteWithChildren
+  FavoritesIndexRoute: typeof FavoritesIndexRoute
   SearchIndexRoute: typeof SearchIndexRoute
 }
 
@@ -87,6 +108,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites/': {
+      id: '/favorites/'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/albums/$artist': {
@@ -121,6 +149,7 @@ const AlbumsArtistRouteWithChildren = AlbumsArtistRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlbumsArtistRoute: AlbumsArtistRouteWithChildren,
+  FavoritesIndexRoute: FavoritesIndexRoute,
   SearchIndexRoute: SearchIndexRoute,
 }
 export const routeTree = rootRouteImport

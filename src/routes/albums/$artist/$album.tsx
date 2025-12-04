@@ -416,7 +416,11 @@ function AlbumDetailPage() {
 						},
 					}}
 				>
-					<TrackList tracks={tracks} />
+					<TrackList
+						tracks={tracks}
+						albumName={albumData.name}
+						albumArtist={albumData.artist}
+					/>
 				</Box>
 			</Container>
 		</Box>
