@@ -13,11 +13,10 @@ export function Pagination({
 	onPageChange,
 }: PaginationProps) {
 	const maxVisiblePages = 5;
-	const displayedTotalPages = Math.min(totalPages, 10);
 
 	const getPageNumbers = (): number[] => {
-		if (displayedTotalPages <= maxVisiblePages) {
-			return Array.from({ length: displayedTotalPages }, (_, i) => i + 1);
+		if (totalPages <= maxVisiblePages) {
+			return Array.from({ length: totalPages }, (_, i) => i + 1);
 		}
 
 		const half = Math.floor(maxVisiblePages / 2);
@@ -29,9 +28,9 @@ export function Pagination({
 			end = maxVisiblePages;
 		}
 
-		if (end > displayedTotalPages) {
-			end = displayedTotalPages;
-			start = displayedTotalPages - maxVisiblePages + 1;
+		if (end > totalPages) {
+			end = totalPages;
+			start = totalPages - maxVisiblePages + 1;
 		}
 
 		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -81,22 +80,20 @@ export function Pagination({
 				</Button>
 			))}
 
-			{pageNumbers[pageNumbers.length - 1] < displayedTotalPages && (
+			{pageNumbers[pageNumbers.length - 1] < totalPages && (
 				<>
-					{pageNumbers[pageNumbers.length - 1] < displayedTotalPages - 1 && (
+					{pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
 						<Text color="fg.muted" px={1}>
 							...
 						</Text>
 					)}
 					<Button
-						variant={currentPage === displayedTotalPages ? "solid" : "ghost"}
-						colorPalette={
-							currentPage === displayedTotalPages ? "primary" : "gray"
-						}
+						variant={currentPage === totalPages ? "solid" : "ghost"}
+						colorPalette={currentPage === totalPages ? "primary" : "gray"}
 						size="sm"
-						onClick={() => onPageChange(displayedTotalPages)}
+						onClick={() => onPageChange(totalPages)}
 					>
-						{displayedTotalPages}
+						{totalPages}
 					</Button>
 				</>
 			)}
@@ -105,7 +102,7 @@ export function Pagination({
 				variant="ghost"
 				size="sm"
 				onClick={() => onPageChange(currentPage + 1)}
-				disabled={currentPage >= displayedTotalPages}
+				disabled={currentPage >= totalPages}
 			>
 				Next
 				<ChevronRight size={18} />

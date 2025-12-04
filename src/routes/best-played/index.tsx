@@ -50,8 +50,8 @@ function BestPlayedPage() {
 		navigate({
 			to: "/albums/$artist/$album",
 			params: {
-				artist: albumData.artist,
-				album: albumData.name,
+				artist: encodeURIComponent(albumData.artist),
+				album: encodeURIComponent(albumData.name),
 			},
 			search: {
 				from: "best-played",
@@ -133,7 +133,7 @@ function BestPlayedPage() {
 									<HStack gap={2}>
 										{currentPage > 0 && totalPages > 0 && (
 											<Badge variant="outline">
-												Page {currentPage} of {Math.min(totalPages, 10)}
+												Page {currentPage} of {totalPages}
 											</Badge>
 										)}
 										<Badge colorPalette="primary" variant="subtle">
