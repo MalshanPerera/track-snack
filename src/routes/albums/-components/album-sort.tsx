@@ -1,10 +1,8 @@
 import { createListCollection, HStack, Select, Text } from "@chakra-ui/react";
 import { ArrowUpDown, Check } from "lucide-react";
 
-import {
-	type SortOption,
-	SortOptions,
-} from "@/domain/value-objects/sort-option";
+import type { SortOption } from "@/types";
+import { SortOptions } from "@/types";
 
 interface AlbumSortProps {
 	value: SortOption;

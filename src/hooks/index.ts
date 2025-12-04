@@ -1,5 +1,3 @@
-// Presentation Layer Hooks
-
 export * from "./use-album-info";
 export * from "./use-album-search";
 export * from "./use-artist-albums";

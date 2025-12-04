@@ -19,12 +19,9 @@ import {
 } from "@chakra-ui/react";
 import { Disc3 } from "lucide-react";
 
-import type { Album } from "@/domain/entities/album";
-import {
-	type SortOption,
-	SortOptions,
-} from "@/domain/value-objects/sort-option";
-import { useArtistAlbums, useSortedAlbums } from "@/presentation/hooks";
+import { useArtistAlbums, useSortedAlbums } from "@/hooks";
+import type { Album, SortOption } from "@/types";
+import { SortOptions } from "@/types";
 
 import { AlbumGrid } from "./-components/album-grid";
 import { AlbumSort } from "./-components/album-sort";

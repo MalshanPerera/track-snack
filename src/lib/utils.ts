@@ -1,4 +1,4 @@
-import type { AlbumImage, ImageSize, Track } from "@/domain/entities/album";
+import type { AlbumImage, ImageSize, Track } from "@/types";
 
 /**
  * Utility Functions

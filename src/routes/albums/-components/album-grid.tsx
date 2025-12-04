@@ -1,7 +1,7 @@
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 import { Disc3 } from "lucide-react";
 
-import type { Album } from "@/domain/entities/album";
+import type { Album } from "@/types";
 
 import { AlbumCard } from "./album-card";
 

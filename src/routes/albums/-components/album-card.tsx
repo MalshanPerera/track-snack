@@ -1,8 +1,8 @@
 import { Badge, Box, Card, Image, Text, VStack } from "@chakra-ui/react";
 import { Disc3, Play } from "lucide-react";
 
-import type { Album } from "@/domain/entities/album";
 import { formatPlayCount, getAlbumImage } from "@/lib/utils";
+import type { Album } from "@/types";
 
 interface AlbumCardProps {
 	album: Album;
@@ -101,7 +101,10 @@ export function AlbumCard({ album, onClick, index = 0 }: AlbumCardProps) {
 						top={0}
 						left={0}
 					>
-						<Disc3 size={48} style={{ color: "var(--chakra-colors-fg-muted)" }} />
+						<Disc3
+							size={48}
+							style={{ color: "var(--chakra-colors-fg-muted)" }}
+						/>
 					</Box>
 
 					{/* Gradient overlay for hover */}

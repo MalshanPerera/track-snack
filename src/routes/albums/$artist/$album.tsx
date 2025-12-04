@@ -23,8 +23,8 @@ import {
 	Users,
 } from "lucide-react";
 
+import { useAlbumInfo } from "@/hooks";
 import { formatPlayCount, getAlbumImage } from "@/lib/utils";
-import { useAlbumInfo } from "@/presentation/hooks";
 
 import { TrackList } from "./-components/track-list";
 
@@ -84,7 +84,10 @@ function AlbumDetailPage() {
 							alignItems="center"
 							justifyContent="center"
 						>
-							<Disc3 size={40} style={{ color: "var(--chakra-colors-red-500)" }} />
+							<Disc3
+								size={40}
+								style={{ color: "var(--chakra-colors-red-500)" }}
+							/>
 						</Box>
 						<VStack gap={2}>
 							<Heading size="xl" color="fg.default">

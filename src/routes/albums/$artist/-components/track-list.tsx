@@ -1,8 +1,8 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { Clock, Music, Play } from "lucide-react";
 
-import type { Track } from "@/domain/entities/album";
 import { formatDuration } from "@/lib/utils";
+import type { Track } from "@/types";
 
 interface TrackListProps {
 	tracks: Track[];
@@ -169,7 +169,10 @@ export function TrackList({ tracks, totalDuration }: TrackListProps) {
 				mb={2}
 			>
 				<HStack gap={2} align="center">
-					<Music size={20} style={{ color: "var(--chakra-colors-primary-500)" }} />
+					<Music
+						size={20}
+						style={{ color: "var(--chakra-colors-primary-500)" }}
+					/>
 					<Text fontWeight="bold" fontSize="lg" color="fg.default">
 						{tracks.length} Track{tracks.length !== 1 ? "s" : ""}
 					</Text>
@@ -197,4 +200,3 @@ export function TrackList({ tracks, totalDuration }: TrackListProps) {
 		</VStack>
 	);
 }
-

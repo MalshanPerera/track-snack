@@ -1,7 +1,7 @@
 import { Badge, Box, Spinner, Tabs, Text, VStack } from "@chakra-ui/react";
 
-import type { Album, Track } from "@/domain/entities/album";
 import { AlbumGrid } from "@/routes/albums/-components/album-grid";
+import type { Album, Track } from "@/types";
 
 import { TrackListItem } from "./track-list-item";
 

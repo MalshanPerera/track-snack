@@ -1,11 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useDI } from "@/di";
-
-/**
- * Presentation Hook: Album Info
- * React Query hook for fetching album details
- */
+import { getAlbumInfo } from "@/api/lastfm";
 
 export const albumInfoKeys = {
 	all: ["albums", "info"] as const,
@@ -14,11 +9,9 @@ export const albumInfoKeys = {
 };
 
 export function useAlbumInfo(artist: string, album: string, enabled = true) {
-	const { getAlbumInfoUseCase } = useDI();
-
 	return useQuery({
 		queryKey: albumInfoKeys.detail(artist, album),
-		queryFn: () => getAlbumInfoUseCase.execute(artist, album),
+		queryFn: () => getAlbumInfo(artist, album),
 		enabled: enabled && artist.length > 0 && album.length > 0,
 		staleTime: 10 * 60 * 1000, // 10 minutes
 	});

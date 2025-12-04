@@ -1,7 +1,5 @@
-/**
- * Domain Entity: Album
- * Clean domain model without external API dependencies
- */
+// Domain types for Album and Track
+
 export interface Album {
 	name: string;
 	artist: string;
@@ -27,10 +25,6 @@ export interface AlbumWiki {
 	content: string;
 }
 
-/**
- * Domain Entity: Track
- * Clean domain model for music tracks
- */
 export interface Track {
 	name: string;
 	artist: TrackArtist;
@@ -48,3 +42,13 @@ export interface TrackArtist {
 	mbid?: string;
 	url?: string;
 }
+
+// Sort options
+export const SortOptions = {
+	NAME_ASC: "name-asc",
+	NAME_DESC: "name-desc",
+	YEAR_ASC: "year-asc",
+	YEAR_DESC: "year-desc",
+} as const;
+
+export type SortOption = (typeof SortOptions)[keyof typeof SortOptions];

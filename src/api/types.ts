@@ -1,7 +1,4 @@
-/**
- * Last.fm API Response Types
- * These are infrastructure-specific DTOs that match the Last.fm API format
- */
+// Last.fm API response types
 
 export interface LastFmResponse<T> {
 	results?: {
@@ -19,10 +16,6 @@ export interface LastFmResponse<T> {
 	message?: string;
 }
 
-/**
- * Last.fm API Album DTO
- * Raw format from the API with "#text" and other API-specific structures
- */
 export interface LastFmAlbumDto {
 	name: string;
 	artist: string;
@@ -41,9 +34,6 @@ export interface LastFmAlbumDto {
 	};
 }
 
-/**
- * Last.fm API Track DTO
- */
 export interface LastFmTrackDto {
 	name: string;
 	artist:
@@ -67,18 +57,11 @@ export interface LastFmTrackDto {
 	};
 }
 
-/**
- * Last.fm API Image DTO
- */
 export interface LastFmImageDto {
 	"#text": string;
 	size: "small" | "medium" | "large" | "extralarge" | "mega" | "";
 }
 
-/**
- * Last.fm API Top Albums Response
- * Response format for artist.gettopalbums endpoint
- */
 export interface LastFmTopAlbumsResponse {
 	topalbums: {
 		album: LastFmTopAlbumDto[];
@@ -94,10 +77,6 @@ export interface LastFmTopAlbumsResponse {
 	message?: string;
 }
 
-/**
- * Last.fm API Top Album DTO
- * Format returned by artist.gettopalbums endpoint
- */
 export interface LastFmTopAlbumDto {
 	name: string;
 	playcount: number;

@@ -4,8 +4,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Container, Heading, VStack } from "@chakra-ui/react";
 
-import type { Album, Track } from "@/domain/entities/album";
-import { useAlbumSearch, useTrackSearch } from "@/presentation/hooks";
+import { useAlbumSearch, useTrackSearch } from "@/hooks";
+import type { Album, Track } from "@/types";
 
 import { SearchBar } from "./-components/search-bar";
 import { SearchResults } from "./-components/search-results";
